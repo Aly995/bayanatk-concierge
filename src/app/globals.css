@@ -17,24 +17,64 @@
   --font-arabic: "Readex Pro Variable", system-ui, sans-serif;
 }
 
-html,
-body {
-  height: 100%;
+/*
+ * Hotel websites: each hotel's brand colours arrive as CSS variables on <body>
+ * (see app/(site)/.../layout.tsx), so `bg-hotel`, `text-hotel-accent` etc. follow the hotel.
+ */
+@theme inline {
+  --color-hotel: var(--hotel-primary, #0b6e4f);
+  --color-hotel-accent: var(--hotel-accent, #c9a24b);
+  --color-hotel-ink: var(--hotel-ink, #12211e);
 }
 
-body {
-  background: var(--color-surface);
-  color: var(--color-ink);
+/* Base styles sit in the base layer so utility classes can override them. */
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  /* Arabic and Urdu text uses the Arabic face automatically. */
+  :lang(ar),
+  :lang(ur),
+  [dir="rtl"] {
+    font-family: var(--font-arabic);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  .site :focus-visible {
+    outline-color: var(--hotel-primary);
+  }
 }
 
-/* Arabic and Urdu text uses the Arabic face automatically. */
-:lang(ar),
-:lang(ur),
-[dir="rtl"] {
-  font-family: var(--font-arabic);
+/* The hero's walking route draws itself once. Skipped for people who prefer less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .route-draw {
+    stroke-dasharray: 520;
+    stroke-dashoffset: 520;
+    animation: route-draw 1.8s 0.3s ease-out forwards;
+  }
+  .route-end {
+    opacity: 0;
+    animation: route-end 0.4s 2s ease-out forwards;
+  }
 }
-
-:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
+@keyframes route-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes route-end {
+  to {
+    opacity: 1;
+  }
 }

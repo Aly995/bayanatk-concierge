@@ -2,12 +2,38 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { z } from "zod";
 import { config } from "./config";
+import { FixedWindowLimiter } from "./ratelimit";
 import { getStore } from "./store";
 import type { Hotel } from "./types";
 
 export class HttpError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+    public headers: Record<string, string> = {},
+  ) {
     super(message);
+  }
+}
+
+const publicLimiter = new FixedWindowLimiter(config.limits.requestsPerMinute, 60_000);
+
+/** The visitor's IP as Cloudflare (or another proxy) reports it. */
+function clientKey(req: Request): string {
+  return (
+    req.headers.get("cf-connecting-ip") ??
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown"
+  );
+}
+
+/** Public endpoints (guest chat, booking requests): limit requests per visitor per minute. */
+export function enforceRateLimit(req: Request, scope: string): void {
+  const result = publicLimiter.hit(`${scope}:${clientKey(req)}`);
+  if (!result.ok) {
+    throw new HttpError(429, "Too many requests. Please wait a moment and try again.", {
+      "Retry-After": String(result.retryAfterSec),
+    });
   }
 }
 
@@ -44,7 +70,9 @@ export function route<A extends unknown[]>(handler: (...args: A) => Promise<Resp
     try {
       return await handler(...args);
     } catch (err) {
-      if (err instanceof HttpError) return NextResponse.json({ error: err.message }, { status: err.status });
+      if (err instanceof HttpError) {
+        return NextResponse.json({ error: err.message }, { status: err.status, headers: err.headers });
+      }
       console.error(err);
       return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }

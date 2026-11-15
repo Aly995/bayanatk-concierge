@@ -1,4 +1,7 @@
+import type { HotelSite } from "../site/schema";
 import type {
+  BookingRequest,
+  BookingStatus,
   Channel,
   Conversation,
   ConversationStatus,
@@ -18,6 +21,8 @@ export interface NewRequest {
   roomNumber: string | null;
   details: string;
 }
+
+export type NewBookingRequest = Omit<BookingRequest, "id" | "status" | "createdAt">;
 
 export interface ConversationPatch {
   status?: ConversationStatus;
@@ -54,4 +59,12 @@ export interface Store {
 
   /** Returns true the first time an external (e.g. WhatsApp) message id is seen. */
   claimExternalMessage(externalMessageId: string): Promise<boolean>;
+
+  /* ---- Hotel website ---- */
+
+  /** The hotel's website content, validated. Null if the hotel has no website yet. */
+  getHotelSite(hotelId: string): Promise<HotelSite | null>;
+  createBookingRequest(input: NewBookingRequest): Promise<BookingRequest>;
+  listBookingRequests(hotelId: string): Promise<BookingRequest[]>;
+  updateBookingStatus(hotelId: string, id: string, status: BookingStatus): Promise<BookingRequest | null>;
 }

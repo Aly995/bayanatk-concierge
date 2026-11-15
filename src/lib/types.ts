@@ -75,3 +75,29 @@ export interface ServiceRequest {
 }
 
 export type Urgency = "low" | "normal" | "urgent";
+
+export const BOOKING_STATUSES = ["new", "confirmed", "declined", "cancelled"] as const;
+export type BookingStatus = (typeof BOOKING_STATUSES)[number];
+
+/** A booking request from the hotel website. Staff confirm it; no payment is taken. */
+export interface BookingRequest {
+  id: string;
+  hotelId: string;
+  /** Short code the guest can quote, e.g. "BK-7K3Q9X". */
+  reference: string;
+  roomId: string;
+  checkIn: string; // YYYY-MM-DD
+  checkOut: string; // YYYY-MM-DD
+  adults: number;
+  children: number;
+  isGroup: boolean;
+  groupSize: number | null;
+  guestName: string;
+  phone: string;
+  email: string | null;
+  country: string | null;
+  language: "en" | "ar";
+  specialRequests: string | null;
+  status: BookingStatus;
+  createdAt: string;
+}

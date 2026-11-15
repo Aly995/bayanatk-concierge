@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { arCount } from "@/lib/site/strings";
 import type { Message } from "@/lib/types";
 
 const SUGGESTIONS = [
@@ -27,7 +28,8 @@ function getSessionId(slug: string): string {
   }
 }
 
-export function GuestChat({ slug, name, nameAr }: { slug: string; name: string; nameAr: string }) {
+export function GuestChat(props: { slug: string; name: string; nameAr: string; privacyHref: string; retentionDays: number }) {
+  const { slug, name, nameAr } = props;
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [text, setText] = useState("");
@@ -150,6 +152,15 @@ export function GuestChat({ slug, name, nameAr }: { slug: string; name: string; 
           Send
         </button>
       </form>
+      <p className="px-4 pb-3 text-center text-[11px] leading-relaxed text-muted">
+        Replies are written by AI from the hotel&apos;s information. Chats are deleted after {props.retentionDays} days.{" "}
+        <a href={props.privacyHref} target="_blank" rel="noopener" className="underline">Privacy notice</a>
+        <br />
+        <span dir="rtl" lang="ar">
+          الردود يكتبها مساعد ذكي من معلومات الفندق. تُحذف المحادثات بعد {arCount(props.retentionDays, ["يوم واحد", "يومان", "أيام", "يوماً"])}.{" "}
+          <a href={props.privacyHref} target="_blank" rel="noopener" className="underline">إشعار الخصوصية</a>
+        </span>
+      </p>
     </div>
   );
 }

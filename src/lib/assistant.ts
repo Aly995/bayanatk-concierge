@@ -19,6 +19,18 @@ export interface GuestMessageResult {
 }
 
 const MAX_HISTORY = 20;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export interface AssistantLimits {
+  /** After this many guest messages in 24 hours the AI stops and staff take over. */
+  maxGuestMessagesPerDay: number;
+}
+
+const DEFAULT_LIMITS: AssistantLimits = { maxGuestMessagesPerDay: 50 };
+
+const LIMIT_REACHED_REPLY =
+  "Thank you for your messages. A member of our team will continue with you here shortly.\n" +
+  "شكراً لرسائلك، سيكمل معك أحد موظفينا هنا قريباً.";
 
 /**
  * The single entry point for a guest message, whatever the channel.
@@ -26,10 +38,12 @@ const MAX_HISTORY = 20;
  * tools the AI calls, and saves the reply.
  */
 export async function handleGuestMessage(
-  deps: { store: Store; ai: AIProvider },
+  deps: { store: Store; ai: AIProvider; limits?: AssistantLimits; now?: () => Date },
   input: GuestMessageInput,
 ): Promise<GuestMessageResult> {
   const { store, ai } = deps;
+  const limits = deps.limits ?? DEFAULT_LIMITS;
+  const now = deps.now ?? (() => new Date());
   const { hotel } = input;
   const text = input.text.trim().slice(0, 2000);
 
@@ -51,7 +65,20 @@ export async function handleGuestMessage(
     return { conversation: (await store.getConversation(hotel.id, conversation.id))!, reply: null };
   }
 
-  const history = (await store.listMessages(hotel.id, conversation.id))
+  const allMessages = await store.listMessages(hotel.id, conversation.id);
+
+  // Cost and abuse cap: too many guest messages in 24 hours hands over to staff.
+  const since = now().getTime() - DAY_MS;
+  const recentGuestMessages = allMessages.filter(
+    (m) => m.role === "guest" && new Date(m.createdAt).getTime() >= since,
+  ).length;
+  if (recentGuestMessages > limits.maxGuestMessagesPerDay) {
+    await store.updateConversation(hotel.id, conversation.id, { status: "needs_staff" });
+    const reply = await store.addMessage(hotel.id, conversation.id, "assistant", LIMIT_REACHED_REPLY);
+    return { conversation: (await store.getConversation(hotel.id, conversation.id))!, reply };
+  }
+
+  const history = allMessages
     .slice(-MAX_HISTORY)
     // Staff replies count as the hotel's side of the conversation.
     .map((m) => ({ role: m.role === "guest" ? ("user" as const) : ("assistant" as const), content: m.content }));

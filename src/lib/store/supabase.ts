@@ -1,12 +1,14 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { hotelSiteSchema, type HotelSite } from "../site/schema";
 import type {
+  BookingRequest,
   Conversation,
   Hotel,
   KnowledgeItem,
   Message,
   ServiceRequest,
 } from "../types";
-import type { ConversationPatch, NewRequest, Store } from "./store";
+import type { ConversationPatch, NewBookingRequest, NewRequest, Store } from "./store";
 
 /**
  * Supabase-backed store. Runs ONLY on the server with the service-role key,
@@ -174,9 +176,94 @@ export class SupabaseStore implements Store {
     if (error.code === "23505") return false; // unique_violation: already processed
     throw error;
   }
+
+  async getHotelSite(hotelId: string): Promise<HotelSite | null> {
+    const { data, error } = await this.db.from("hotel_sites").select("content").eq("hotel_id", hotelId).maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    // Content is JSON written by people: validate before any page uses it.
+    const parsed = hotelSiteSchema.safeParse(data.content);
+    if (!parsed.success) {
+      console.error(`Invalid site content for hotel ${hotelId}`, parsed.error.issues.slice(0, 5));
+      return null;
+    }
+    return parsed.data;
+  }
+
+  async createBookingRequest(input: NewBookingRequest) {
+    const { data, error } = await this.db
+      .from("booking_requests")
+      .insert({
+        hotel_id: input.hotelId,
+        reference: input.reference,
+        room_id: input.roomId,
+        check_in: input.checkIn,
+        check_out: input.checkOut,
+        adults: input.adults,
+        children: input.children,
+        is_group: input.isGroup,
+        group_size: input.groupSize,
+        guest_name: input.guestName,
+        phone: input.phone,
+        email: input.email,
+        country: input.country,
+        language: input.language,
+        special_requests: input.specialRequests,
+      })
+      .select("*")
+      .single();
+    if (error) throw error;
+    return toBooking(data);
+  }
+
+  async listBookingRequests(hotelId: string) {
+    const { data, error } = await this.db
+      .from("booking_requests")
+      .select("*")
+      .eq("hotel_id", hotelId)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return (data ?? []).map(toBooking);
+  }
+
+  async updateBookingStatus(hotelId: string, id: string, status: BookingRequest["status"]) {
+    const { data, error } = await this.db
+      .from("booking_requests")
+      .update({ status })
+      .eq("hotel_id", hotelId)
+      .eq("id", id)
+      .select("*")
+      .maybeSingle();
+    if (error) throw error;
+    return data ? toBooking(data) : null;
+  }
 }
 
 /* ---- row mappers: database snake_case to domain camelCase ---- */
+
+function toBooking(r: Row): BookingRequest {
+  return {
+    id: r.id,
+    hotelId: r.hotel_id,
+    reference: r.reference,
+    roomId: r.room_id,
+    checkIn: r.check_in,
+    checkOut: r.check_out,
+    adults: r.adults,
+    children: r.children,
+    isGroup: r.is_group,
+    groupSize: r.group_size,
+    guestName: r.guest_name,
+    phone: r.phone,
+    email: r.email,
+    country: r.country,
+    language: r.language,
+    specialRequests: r.special_requests,
+    status: r.status,
+    createdAt: r.created_at,
+  };
+}
 
 type Row = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 

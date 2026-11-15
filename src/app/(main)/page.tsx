@@ -28,7 +28,7 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link href={`/h/${slug}`} className="group rounded-2xl border border-line bg-white p-6 transition hover:border-brand">
           <p className="text-xs font-bold uppercase tracking-widest text-brand">For guests</p>
           <h2 className="mt-2 text-xl font-extrabold">Open the guest chat →</h2>
@@ -37,7 +37,12 @@ export default function Home() {
         <Link href={`/dashboard/${slug}`} className="group rounded-2xl border border-line bg-white p-6 transition hover:border-brand">
           <p className="text-xs font-bold uppercase tracking-widest text-brand">For staff</p>
           <h2 className="mt-2 text-xl font-extrabold">Open the staff inbox →</h2>
-          <p className="mt-1 text-sm text-muted">Live conversations, requests to action, and hand-over to staff.</p>
+          <p className="mt-1 text-sm text-muted">Live conversations, requests to action, booking requests and the pilot report.</p>
+        </Link>
+        <Link href={`/site/${slug}/en`} className="group rounded-2xl border border-line bg-white p-6 transition hover:border-brand">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand">Hotel website</p>
+          <h2 className="mt-2 text-xl font-extrabold">Open the sample website →</h2>
+          <p className="mt-1 text-sm text-muted">Rooms, offers and direct booking requests, in English and Arabic.</p>
         </Link>
       </section>
 

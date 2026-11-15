@@ -13,5 +13,5 @@ export default async function DashboardPage({
   const { key } = await searchParams;
   const hotel = await getStore().getHotelBySlug(slug);
   if (!hotel) notFound();
-  return <StaffInbox slug={hotel.slug} hotelName={hotel.name} staffKey={key ?? ""} />;
+  return <StaffInbox slug={hotel.slug} hotelName={hotel.name} hotelNameAr={hotel.nameAr} staffKey={key ?? ""} />;
 }

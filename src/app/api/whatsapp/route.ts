@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       if (!(await store.claimExternalMessage(msg.messageId))) continue;
       try {
         const { reply } = await handleGuestMessage(
-          { store, ai: getAIProvider() },
+          { store, ai: getAIProvider(), limits: config.limits },
           { hotel, channel: "whatsapp", externalId: msg.from, text: msg.text },
         );
         if (reply) {

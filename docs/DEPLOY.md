@@ -59,12 +59,32 @@ The demo hotel (`demo-madinah`) stays open to everyone through `PUBLIC_DEMO_HOTE
 > conversations live in the Worker's memory. Cloudflare can run several copies of the Worker
 > and restarts them when idle, so a guest's message may not show up in the staff inbox, or may
 > disappear after a few minutes. Supabase (free plan) fixes this:
-> run `supabase/migrations/0001_init.sql` and `supabase/seed.sql` in the Supabase SQL editor,
-> then add the two Supabase secrets above.
+> in the Supabase SQL editor run, in order, `supabase/migrations/0001_init.sql`,
+> `supabase/migrations/0002_website_and_retention.sql`, `supabase/seed.sql` and `supabase/seed_site.sql`,
+> then add the Supabase secret above.
 
 ### 5. Add the demo to bayanatk.com
 Copy the section in `docs/bayanatk-demo-section.html` into your website's code where you
 show your work, commit and push. Your existing Cloudflare deployment publishes it.
+
+### 6. Protection and clean-up (before real guests)
+**Rate limiting rule.** The app already limits each visitor, but per Worker copy. Add Cloudflare's own
+limit: Cloudflare dashboard → bayanatk.com → **Security** → **WAF** → **Rate limiting rules** → Create:
+- If incoming requests match: Hostname equals `demo.bayanatk.com`, URI Path starts with `/api/hotels/`,
+  Request Method equals `POST`
+- Same characteristics: IP. When rate exceeds: 10 requests per 10 seconds. Action: Block.
+
+The Free plan includes one such rule with a 10-second window.
+
+**Delete old data automatically.** Supabase → **Integrations** → **Cron** → enable, then in the SQL editor:
+
+```sql
+select cron.schedule('purge-guest-data', '15 3 * * *', $$select public.purge_old_guest_data(90, 365)$$);
+```
+
+This deletes chats 90 days after the last message and booking requests after 365 days, every night
+at 03:15 UTC. Keep the numbers equal to `DATA_RETENTION_DAYS` and `BOOKING_RETENTION_DAYS`, which the
+privacy notice shows to guests.
 
 ## After setup
 - Every `git push` to `main` redeploys `demo.bayanatk.com` automatically.
@@ -75,6 +95,7 @@ show your work, commit and push. Your existing Cloudflare deployment publishes i
 | Who | Link |
 |---|---|
 | Anyone (public demo) | `https://demo.bayanatk.com` |
+| Sample hotel website | `https://demo.bayanatk.com/site/demo-madinah` (opens Arabic for Arabic browsers) |
 | Guests of a pilot hotel (QR code) | `https://demo.bayanatk.com/h/<hotel-slug>` |
 | Staff of a pilot hotel | `https://demo.bayanatk.com/dashboard/<hotel-slug>?key=<STAFF_ACCESS_KEY>` |
 

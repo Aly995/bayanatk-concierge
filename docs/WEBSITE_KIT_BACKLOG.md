@@ -1,8 +1,8 @@
 # Hotel Website Kit: feature backlog (for later)
 
 Extra features suggested after comparing the website blueprint with Hilton, Marriott and Accor,
-plus features specific to Madinah. **None of these are in the current website plan.** Pick them up
-after the core kit (blueprint, sample site, booking requests) is built.
+plus features specific to Madinah. The core kit (blueprint, sample site, booking requests) is built
+(v0.2); these are the next layer. Items marked ◐ are partly covered by the core kit.
 
 Each item lists: why it matters, what "done" means, what it needs, and rough effort
 (S = under a day, M = 1-2 days, L = 3+ days).
@@ -61,14 +61,16 @@ Status key: ☐ not started · ◐ in progress · ☑ done
 **Done when:** one message after checkout with a link to the hotel's Google review page; one message only, guest can opt out
 **Depends on:** A5
 
-### A7. Special requests and accessibility ☐  · S
+### A7. Special requests and accessibility ◐  · S
+**Already:** rooms can be marked accessible ("Step-free"), free-text special requests on the form, shown in the staff inbox.
 **Why:** Many pilgrims are elderly or travel with family.
 **Done when:**
 - Booking form has checkboxes: wheelchair access, near the lift, low floor, elderly guest, connecting rooms, cot, plus free text
 - Rooms can be marked as accessible; the website can filter for them
 - Requests show clearly in the staff inbox
 
-### A8. Privacy policy, cookie notice, terms ☐  · S
+### A8. Privacy policy, cookie notice, terms ◐  · S
+**Already:** bilingual privacy notice per hotel, consent checkbox, retention function. No cookies are used. Still to do: terms page, lawyer review.
 **Why:** Required under Saudi Arabia's Personal Data Protection Law (PDPL) before collecting guest details.
 **Done when:**
 - Privacy policy and terms pages per hotel (AR/EN), based on a reviewed template
@@ -77,7 +79,8 @@ Status key: ☐ not started · ◐ in progress · ☑ done
 - Data retention rule applied (for example, delete booking requests and chats after a set period)
 **Note:** have the templates reviewed by a lawyer before a real hotel goes live.
 
-### A9. Analytics and booking tracking ☐  · S
+### A9. Analytics and booking tracking ◐  · S
+**Already:** the pilot report counts booking requests and confirmations. Still to do: visits and the funnel.
 **Why:** Proves the website's value at the end of a pilot (visits, booking starts, completed requests).
 **Done when:**
 - Privacy-friendly analytics (for example Cloudflare Web Analytics, no cookies)

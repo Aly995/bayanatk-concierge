@@ -20,10 +20,12 @@ Architecture: `docs/ARCHITECTURE.md`. Plans: `docs/ROADMAP.md`.
 6. **Database changes are new migration files** (`supabase/migrations/0002_*.sql`), never
    edits to old ones. Enable RLS on new tables and add a test in `tests/rls.test.ts`.
 7. **Arabic and RTL are first-class.** Use `dir="auto"` on user text; test with Arabic and Urdu.
+   Website interface text goes in `src/lib/site/strings.ts` in both languages; use logical
+   classes (`ms-`, `me-`, `start-`, `text-start`) so layouts mirror in Arabic.
 8. **Pin dependency versions** (exact numbers in package.json).
 
 ## Definition of done
-- `npm test` passes (assistant, WhatsApp, languages, database isolation)
+- `npm test` passes (assistant, WhatsApp, languages, website and bookings, pilot limits, database isolation)
 - `npm run typecheck` passes
 - `npm run build` passes, and `npm run cf:build` passes (Cloudflare Workers is the production host)
 - New behaviour has a test

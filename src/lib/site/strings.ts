@@ -1,0 +1,228 @@
+import type { BookingError } from "../booking";
+import type { SiteLanguage } from "./schema";
+
+/**
+ * Fixed interface text for hotel websites, in every site language.
+ * Hotel-specific text (rooms, offers, FAQs) lives in the hotel's site content, not here.
+ * TypeScript checks that Arabic has every key English has.
+ */
+const en = {
+  langName: "English",
+  otherLangName: "العربية",
+  nav: { rooms: "Rooms", offers: "Offers", location: "Location", faq: "Questions" },
+  demoBanner: "Sample website for a fictional hotel, made by Bayanatk. Prices and contact details are examples.",
+  book: "Request a booking",
+  whatsapp: "Message us on WhatsApp",
+  walk: (min: number) => `${min} minutes' walk to the Prophet's Mosque`,
+  walkShort: (min: number) => `${min} min walk`,
+  viaGate: (gate: string) => `Enter at ${gate}`,
+  perksTitle: "When you book with us directly",
+  roomsTitle: "Rooms",
+  roomsIntro: "Every price is a starting price per night. We confirm the exact price for your dates.",
+  sqm: (n: number) => `${n} m²`,
+  upToGuests: (n: number) => (n === 1 ? "1 guest" : `Up to ${n} guests`),
+  fromPerNight: (price: string) => `From SAR ${price} a night`,
+  requestRoom: "Request this room",
+  accessible: "Step-free",
+  views: { haram: "Haram view", city: "City view", courtyard: "Courtyard view" },
+  offersTitle: "Offers",
+  includes: "Includes",
+  groupsTitle: "Bringing an Umrah group?",
+  groupsBody: "Agents and group leaders get a group rate, a rooming list template and one contact person for the whole stay.",
+  groupsCta: "Ask for a group rate",
+  locationTitle: "Getting here",
+  toHaram: "To the Prophet's Mosque",
+  toAirport: "To Madinah airport",
+  toTrain: "To the Haramain train station",
+  km: (n: number) => `${n} km`,
+  openMap: "Open in Google Maps",
+  facilitiesTitle: "At the hotel",
+  faqTitle: "Questions guests ask",
+  policiesTitle: "Good to know",
+  checkIn: "Check-in",
+  checkOut: "Check-out",
+  from: (t: string) => `from ${t}`,
+  by: (t: string) => `by ${t}`,
+  cancellation: "Cancellation",
+  children: "Children",
+  contactTitle: "Contact",
+  phone: "Phone",
+  email: "Email",
+  licence: "Tourism licence",
+  privacy: "Privacy notice",
+  madeBy: "Website and AI assistant by Bayanatk",
+  askUs: "Ask us anything",
+  askShort: "Ask us",
+  bookShort: "Book",
+  closeChat: "Close chat",
+  chatTitle: (hotel: string) => `Chat with ${hotel}`,
+  booking: {
+    title: "Request a booking",
+    intro: "Nothing is charged now. The hotel confirms your room and price on WhatsApp or by phone.",
+    step: (n: number, total: number) => `Step ${n} of ${total}`,
+    stepNames: ["Dates and guests", "Room", "Your details"],
+    checkIn: "Check-in date",
+    checkOut: "Check-out date",
+    adults: "Adults",
+    children: "Children",
+    childrenHint: "Under 12",
+    isGroup: "I am booking for an Umrah group or as an agent",
+    groupSize: "How many people in the group?",
+    nights: (n: number) => (n === 1 ? "1 night" : `${n} nights`),
+    estimate: (nights: number, price: string) => `${nights === 1 ? "1 night" : `${nights} nights`} from SAR ${price}`,
+    tooSmall: (n: number) => `Fits up to ${n}`,
+    guestName: "Full name",
+    phone: "Phone number with WhatsApp",
+    phoneHint: "Include your country code, for example +62 or +92",
+    email: "Email (optional)",
+    country: "Country (optional)",
+    specialRequests: "Anything we should know? (optional)",
+    specialRequestsHint: "For example: near the lift, early arrival, wheelchair",
+    consent: "I agree that the hotel uses these details to answer my booking request, as described in the",
+    next: "Continue",
+    back: "Back",
+    send: "Send booking request",
+    sending: "Sending…",
+    doneTitle: "Request sent",
+    doneBody: "The hotel will contact you on WhatsApp or by phone to confirm. Keep this reference:",
+    doneAgain: "Back to the hotel",
+    tooMany: "Too many requests from this connection. Wait a minute, then send again.",
+    network: "Request not sent. Check your connection and send again.",
+    errors: {
+      unknown_room: "Choose a room from the list.",
+      dates_invalid: "Check-out must be at least one night after check-in.",
+      check_in_in_past: "Choose a check-in date from today onwards.",
+      too_many_nights: "Requests are for up to 30 nights. For longer stays, message us on WhatsApp.",
+      too_many_guests: "This room is too small for your party. Choose a larger room or the group option.",
+      group_size_required: "Enter how many people are in the group.",
+    } satisfies Record<BookingError, string>,
+    required: "Fill in this field.",
+    phoneInvalid: "Enter a phone number with digits only, for example +62 812 3456 7890.",
+    emailInvalid: "Enter an email like name@example.com, or leave it empty.",
+    consentRequired: "Tick the box to send your request.",
+  },
+};
+
+export type SiteStrings = typeof en;
+
+/**
+ * Keeps left-to-right text (phone numbers, codes, dates) in the right order inside Arabic sentences.
+ * Unicode "isolate" marks: LRI ... PDI.
+ */
+export const ltr = (text: string) => `\u2066${text}\u2069`;
+
+/**
+ * Arabic counted nouns: 1, 2, 3–10 and 11+ take different forms.
+ * arCount(5, ["دقيقة", "دقيقتان", "دقائق", "دقيقة"]) -> "5 دقائق"
+ */
+export function arCount(n: number, [one, two, few, many]: [string, string, string, string]): string {
+  if (n === 1) return one;
+  if (n === 2) return two;
+  return `${n} ${n >= 3 && n <= 10 ? few : many}`;
+}
+const MINUTES: [string, string, string, string] = ["دقيقة واحدة", "دقيقتان", "دقائق", "دقيقة"];
+const NIGHTS: [string, string, string, string] = ["ليلة واحدة", "ليلتان", "ليالٍ", "ليلة"];
+
+const ar: SiteStrings = {
+  langName: "العربية",
+  otherLangName: "English",
+  nav: { rooms: "الغرف", offers: "العروض", location: "الموقع", faq: "الأسئلة" },
+  demoBanner: "موقع تجريبي لفندق خيالي من تصميم بياناتك. الأسعار وبيانات التواصل للتوضيح فقط.",
+  book: "اطلب حجزاً",
+  whatsapp: "راسلنا على واتساب",
+  walk: (min) => `${arCount(min, MINUTES)} مشياً إلى المسجد النبوي`,
+  walkShort: (min) => `${arCount(min, MINUTES)} مشياً`,
+  viaGate: (gate) => `الدخول من ${gate}`,
+  perksTitle: "عند الحجز المباشر معنا",
+  roomsTitle: "الغرف",
+  roomsIntro: "كل الأسعار تبدأ من السعر المذكور لليلة، ونؤكد لك السعر النهائي حسب تواريخك.",
+  sqm: (n) => `${n} متر مربع`,
+  upToGuests: (n) => (n === 1 ? "ضيف واحد" : `حتى ${n} ${n <= 10 ? "ضيوف" : "ضيفاً"}`),
+  fromPerNight: (price) => `من ${price} ريال لليلة`,
+  requestRoom: "اطلب هذه الغرفة",
+  accessible: "بلا عتبات",
+  views: { haram: "إطلالة على الحرم", city: "إطلالة على المدينة", courtyard: "إطلالة على الفناء" },
+  offersTitle: "العروض",
+  includes: "يشمل",
+  groupsTitle: "هل تأتي مع مجموعة عمرة؟",
+  groupsBody: "للوكلاء وقادة المجموعات سعر خاص للمجموعة، ونموذج لتوزيع الغرف، وشخص واحد يتابع معكم طوال الإقامة.",
+  groupsCta: "اطلب سعر المجموعة",
+  locationTitle: "الوصول إلينا",
+  toHaram: "إلى المسجد النبوي",
+  toAirport: "إلى مطار المدينة المنورة",
+  toTrain: "إلى محطة قطار الحرمين",
+  km: (n) => `${n} كم`,
+  openMap: "افتح في خرائط Google",
+  facilitiesTitle: "في الفندق",
+  faqTitle: "أسئلة يطرحها الضيوف",
+  policiesTitle: "معلومات مهمة",
+  checkIn: "تسجيل الدخول",
+  checkOut: "تسجيل المغادرة",
+  from: (t) => `من الساعة ${t}`,
+  by: (t) => `حتى الساعة ${t}`,
+  cancellation: "الإلغاء",
+  children: "الأطفال",
+  contactTitle: "التواصل",
+  phone: "الهاتف",
+  email: "البريد الإلكتروني",
+  licence: "ترخيص السياحة",
+  privacy: "إشعار الخصوصية",
+  madeBy: "الموقع والمساعد الذكي من بياناتك",
+  askUs: "اسألنا أي سؤال",
+  askShort: "اسألنا",
+  bookShort: "احجز",
+  closeChat: "إغلاق المحادثة",
+  chatTitle: (hotel) => `محادثة مع ${hotel}`,
+  booking: {
+    title: "اطلب حجزاً",
+    intro: "لا يتم خصم أي مبلغ الآن. يؤكد لك الفندق الغرفة والسعر عبر واتساب أو الهاتف.",
+    step: (n, total) => `الخطوة ${n} من ${total}`,
+    stepNames: ["التواريخ والضيوف", "الغرفة", "بياناتك"],
+    checkIn: "تاريخ الوصول",
+    checkOut: "تاريخ المغادرة",
+    adults: "البالغون",
+    children: "الأطفال",
+    childrenHint: "دون 12 سنة",
+    isGroup: "أحجز لمجموعة عمرة أو بصفتي وكيلاً",
+    groupSize: "كم عدد أفراد المجموعة؟",
+    nights: (n) => arCount(n, NIGHTS),
+    estimate: (nights, price) => `${arCount(nights, NIGHTS)} من ${price} ريال`,
+    tooSmall: (n) => `تتسع حتى ${n}`,
+    guestName: "الاسم الكامل",
+    phone: "رقم الهاتف على واتساب",
+    phoneHint: `مع رمز الدولة، مثل ${ltr("+966")} أو ${ltr("+20")}`,
+    email: "البريد الإلكتروني (اختياري)",
+    country: "الدولة (اختياري)",
+    specialRequests: "هل هناك ما تود إخبارنا به؟ (اختياري)",
+    specialRequestsHint: "مثل: قرب المصعد، وصول مبكر، كرسي متحرك",
+    consent: "أوافق على أن يستخدم الفندق هذه البيانات للرد على طلب الحجز كما هو موضح في",
+    next: "متابعة",
+    back: "رجوع",
+    send: "إرسال طلب الحجز",
+    sending: "جارٍ الإرسال…",
+    doneTitle: "تم إرسال الطلب",
+    doneBody: "سيتواصل معك الفندق عبر واتساب أو الهاتف للتأكيد. احتفظ برقم الطلب:",
+    doneAgain: "العودة إلى صفحة الفندق",
+    tooMany: "طلبات كثيرة من هذا الاتصال. انتظر دقيقة ثم أعد الإرسال.",
+    network: "لم يُرسل الطلب. تحقق من الاتصال وأعد الإرسال.",
+    errors: {
+      unknown_room: "اختر غرفة من القائمة.",
+      dates_invalid: "يجب أن يكون تاريخ المغادرة بعد تاريخ الوصول بليلة على الأقل.",
+      check_in_in_past: "اختر تاريخ وصول من اليوم فصاعداً.",
+      too_many_nights: "الطلبات حتى 30 ليلة. للإقامات الأطول راسلنا على واتساب.",
+      too_many_guests: "هذه الغرفة لا تتسع لعددكم. اختر غرفة أكبر أو خيار المجموعات.",
+      group_size_required: "أدخل عدد أفراد المجموعة.",
+    },
+    required: "املأ هذا الحقل.",
+    phoneInvalid: `أدخل رقم هاتف بالأرقام فقط، مثل ${ltr("+966 50 000 0000")}.`,
+    emailInvalid: "أدخل بريداً مثل name@example.com أو اتركه فارغاً.",
+    consentRequired: "ضع علامة في المربع لإرسال طلبك.",
+  },
+};
+
+export const SITE_STRINGS: Record<SiteLanguage, SiteStrings> = { en, ar };
+
+export const isRtl = (lang: SiteLanguage) => lang === "ar";
+
+/** Prices with Western digits and thousands separators in both languages (common on Saudi sites). */
+export const formatPrice = (n: number) => n.toLocaleString("en-US");

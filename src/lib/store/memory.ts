@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { DEMO_HOTEL } from "@/data/demo-hotel";
-import type { Conversation, Hotel, Message, ServiceRequest } from "../types";
-import type { ConversationPatch, NewRequest, Store } from "./store";
+import { DEMO_SITE } from "@/data/demo-site";
+import { hotelSiteSchema, type HotelSite } from "../site/schema";
+import type { BookingRequest, Conversation, Hotel, Message, ServiceRequest } from "../types";
+import type { ConversationPatch, NewBookingRequest, NewRequest, Store } from "./store";
 
 const now = () => new Date().toISOString();
 
@@ -14,9 +16,13 @@ export class MemoryStore implements Store {
   private messages: Message[] = [];
   private requests = new Map<string, ServiceRequest>();
   private seenExternalIds = new Set<string>();
+  private sites = new Map<string, HotelSite>();
+  private bookings = new Map<string, BookingRequest>();
 
-  constructor(hotels: Hotel[] = [DEMO_HOTEL]) {
+  constructor(hotels: Hotel[] = [DEMO_HOTEL], sites: Record<string, unknown> = { [DEMO_HOTEL.id]: DEMO_SITE }) {
     for (const h of hotels) this.hotels.set(h.id, h);
+    // Same validation as the database path, so bad demo data fails loudly.
+    for (const [hotelId, site] of Object.entries(sites)) this.sites.set(hotelId, hotelSiteSchema.parse(site));
   }
 
   async getHotelBySlug(slug: string) {
@@ -104,5 +110,29 @@ export class MemoryStore implements Store {
     if (this.seenExternalIds.has(externalMessageId)) return false;
     this.seenExternalIds.add(externalMessageId);
     return true;
+  }
+
+  async getHotelSite(hotelId: string) {
+    return this.sites.get(hotelId) ?? null;
+  }
+
+  async createBookingRequest(input: NewBookingRequest) {
+    const b: BookingRequest = { id: randomUUID(), status: "new", createdAt: now(), ...input };
+    this.bookings.set(b.id, b);
+    return b;
+  }
+
+  async listBookingRequests(hotelId: string) {
+    return [...this.bookings.values()]
+      .filter((b) => b.hotelId === hotelId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  async updateBookingStatus(hotelId: string, id: string, status: BookingRequest["status"]) {
+    const b = this.bookings.get(id);
+    if (!b || b.hotelId !== hotelId) return null;
+    const updated = { ...b, status };
+    this.bookings.set(id, updated);
+    return updated;
   }
 }
