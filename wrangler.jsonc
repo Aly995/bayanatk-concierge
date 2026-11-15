@@ -17,6 +17,8 @@
   // never here: Worker > Settings > Variables and Secrets.
   "vars": {
     "WHATSAPP_HOTEL_SLUG": "demo-madinah",
+    // Public project address (not a secret). The service role key is added as a Secret.
+    "SUPABASE_URL": "https://doqjjumwpsgrihdfmwbx.supabase.co",
     // The fictional demo hotel's inbox stays open so bayanatk.com visitors can try it.
     "PUBLIC_DEMO_HOTEL_SLUG": "demo-madinah"
   }

@@ -49,7 +49,7 @@ Worker → **Settings** → **Variables and Secrets** → add as **Secret** (enc
 | Name | Needed | Why |
 |---|---|---|
 | `STAFF_ACCESS_KEY` | Yes | Locks every real hotel's staff inbox. Use a long random value. |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Before showing hotels | Saves conversations (see note below) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Before showing hotels | Saves conversations (see note below). `SUPABASE_URL` is already set in `wrangler.jsonc`. |
 | `ANTHROPIC_API_KEY` | When you want real AI | Without it the demo uses offline replies |
 
 The demo hotel (`demo-madinah`) stays open to everyone through `PUBLIC_DEMO_HOTEL_SLUG` in
