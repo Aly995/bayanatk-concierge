@@ -68,17 +68,19 @@ Copy the section in `docs/bayanatk-demo-section.html` into your website's code w
 show your work, commit and push. Your existing Cloudflare deployment publishes it.
 
 ### 6. Protection and clean-up (before real guests)
-**Rate limiting rule.** The app already limits each visitor, but per Worker copy. Add Cloudflare's own
-limit: Cloudflare dashboard → bayanatk.com → **Security** → **WAF** → **Rate limiting rules** → Create:
-- If incoming requests match: Hostname equals `demo.bayanatk.com`, URI Path starts with `/api/hotels/`,
-  Request Method equals `POST`
-- Same characteristics: IP. When rate exceeds: 10 requests per 10 seconds. Action: Block.
+**Rate limiting rule** (set up 15 Nov 2026). The app already limits each visitor, but per Worker copy.
+Cloudflare's own limit sits in front of it: bayanatk.com → **Security** → **Security rules** →
+**Rate limiting rules** → "Hotel demo API flood limit":
+- Expression: `(starts_with(http.request.uri.path, "/api/hotels/"))` (the Free plan matches on path only)
+- Per IP, 20 requests per 10 seconds, then Block for 10 seconds
 
-The Free plan includes one such rule with a 10-second window.
+20 rather than fewer because the staff inbox polls this API every few seconds, and several staff
+behind one hotel connection share an IP. The Free plan allows one such rule.
 
-**Delete old data automatically.** Supabase → **Integrations** → **Cron** → enable, then in the SQL editor:
+**Delete old data automatically** (set up 15 Nov 2026). In the Supabase SQL editor:
 
 ```sql
+create extension if not exists pg_cron with schema pg_catalog;
 select cron.schedule('purge-guest-data', '15 3 * * *', $$select public.purge_old_guest_data(90, 365)$$);
 ```
 
