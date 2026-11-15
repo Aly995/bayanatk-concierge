@@ -1,0 +1,77 @@
+<!--
+  "Live demo" section for bayanatk.com.
+  Paste where you show your work (for example after the services section).
+  Self-contained: every style is scoped to .bk-demo, so it won't affect the rest of the site.
+  If your site uses React/JSX, rename class= to className= and keep the <style> block in your CSS.
+-->
+<section class="bk-demo" id="live-demo" aria-labelledby="bk-demo-title">
+  <style>
+    .bk-demo{--bk-green:#0c8e6a;--bk-deep:#0b7f58;--bk-mint:#ceefe4;--bk-ink:#12211e;--bk-muted:#4b625a;
+      background:var(--bk-mint);border-radius:24px;padding:40px 24px;margin:48px auto;max-width:1100px;color:var(--bk-ink);
+      font-family:inherit;box-sizing:border-box}
+    .bk-demo *{box-sizing:border-box}
+    .bk-demo .bk-grid{display:grid;gap:28px;grid-template-columns:1fr}
+    @media (min-width:860px){.bk-demo{padding:56px}.bk-demo .bk-grid{grid-template-columns:1.1fr 1fr;align-items:center}}
+    .bk-demo .bk-tag{display:inline-block;background:#fff;color:var(--bk-deep);border-radius:999px;padding:7px 14px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+    .bk-demo h2{font-size:clamp(28px,4vw,40px);line-height:1.1;margin:14px 0 8px;font-weight:800;letter-spacing:-.5px}
+    .bk-demo h2 span{color:var(--bk-deep)}
+    .bk-demo .bk-ar{direction:rtl;text-align:right;font-weight:700;color:var(--bk-deep);font-size:20px;margin:0 0 14px}
+    .bk-demo p{margin:0 0 10px;line-height:1.6;color:var(--bk-ink)}
+    .bk-demo ul{margin:6px 0 22px;padding:0;list-style:none;display:grid;gap:6px}
+    .bk-demo li::before{content:"✓ ";color:var(--bk-green);font-weight:800}
+    .bk-demo .bk-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .bk-demo .bk-btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:13px 22px;font-weight:700;
+      text-decoration:none;border:1.5px solid var(--bk-green)}
+    .bk-demo .bk-primary{background:var(--bk-green);color:#fff}
+    .bk-demo .bk-primary:hover{background:var(--bk-deep)}
+    .bk-demo .bk-secondary{background:#fff;color:var(--bk-deep)}
+    .bk-demo .bk-btn:focus-visible{outline:3px solid var(--bk-ink);outline-offset:2px}
+    .bk-demo .bk-shot{background:#12211e;border-radius:28px;padding:10px;max-width:320px;justify-self:center;width:100%}
+    .bk-demo .bk-screen{background:#f0f4f3;border-radius:20px;overflow:hidden}
+    .bk-demo .bk-bar{background:var(--bk-deep);color:#fff;padding:12px 14px;font-weight:700;font-size:14px}
+    .bk-demo .bk-msgs{padding:12px;display:grid;gap:8px;font-size:13px}
+    .bk-demo .bk-in,.bk-demo .bk-out{padding:8px 11px;border-radius:12px;max-width:85%}
+    .bk-demo .bk-in{background:#fff;justify-self:start}
+    .bk-demo .bk-out{background:var(--bk-mint);justify-self:end}
+    .bk-demo .bk-note{font-size:13px;color:var(--bk-muted);margin-top:14px}
+  </style>
+
+  <div class="bk-grid">
+    <div>
+      <span class="bk-tag">$ ./demo --live</span>
+      <h2 id="bk-demo-title">Try the <span>AI hotel concierge</span> live</h2>
+      <p class="bk-ar">جرّب مساعد الفنادق الذكي مباشرة</p>
+      <p>A multilingual AI assistant built for hotels in Madinah. Ask in Arabic, English, Urdu,
+        Indonesian or Turkish, then open the staff inbox in another tab and watch your requests arrive.</p>
+      <ul>
+        <li>Answers guests 24/7 from the hotel's own information</li>
+        <li>Turns requests into tasks for housekeeping, transport and the front desk</li>
+        <li>Hands complaints and payments to a real person</li>
+      </ul>
+      <div class="bk-actions">
+        <a class="bk-btn bk-primary" href="https://demo.bayanatk.com/h/demo-madinah" target="_blank" rel="noopener">
+          Open the guest chat →
+        </a>
+        <a class="bk-btn bk-secondary" href="https://demo.bayanatk.com/dashboard/demo-madinah" target="_blank" rel="noopener">
+          Open the staff inbox
+        </a>
+      </div>
+      <p class="bk-note">Demo hotel with sample data. Tip: open both links side by side.</p>
+    </div>
+
+    <div class="bk-shot" aria-hidden="true">
+      <div class="bk-screen">
+        <div class="bk-bar">Hotel Assistant · 24/7</div>
+        <div class="bk-msgs">
+          <span class="bk-in">Jam berapa check-in?</span>
+          <span class="bk-out">Check-in mulai pukul 15.00.</span>
+          <span class="bk-in" dir="rtl">كم تبعد المسافة إلى الحرم؟</span>
+          <span class="bk-out" dir="rtl">٥ دقائق مشياً عبر البوابة ٢٥.</span>
+          <span class="bk-in">Need extra towels, room 412</span>
+          <span class="bk-out">Done ✓ Sent to housekeeping.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

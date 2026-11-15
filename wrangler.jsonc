@@ -1,0 +1,23 @@
+{
+  // Cloudflare Worker for Bayanatk Concierge. See docs/DEPLOY.md.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bayanatk-concierge",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Serves the app at demo.bayanatk.com. Cloudflare creates the DNS record
+  // automatically because bayanatk.com is in the same Cloudflare account.
+  "routes": [{ "pattern": "demo.bayanatk.com", "custom_domain": true }],
+  "observability": { "enabled": true },
+  // Plain settings. Secrets (API keys) are added in the Cloudflare dashboard,
+  // never here: Worker > Settings > Variables and Secrets.
+  "vars": {
+    "WHATSAPP_HOTEL_SLUG": "demo-madinah",
+    // The fictional demo hotel's inbox stays open so bayanatk.com visitors can try it.
+    "PUBLIC_DEMO_HOTEL_SLUG": "demo-madinah"
+  }
+}
