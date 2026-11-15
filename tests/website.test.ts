@@ -44,6 +44,9 @@ describe("demo website content", () => {
     expect(facts).toContain(`Check-out by ${site.policies.checkOut}`);
     expect(facts).toContain(`${site.location.walkMinutesToHaram} minutes' walk`);
     expect(facts).toContain(site.location.gate.en);
+    // Book-direct perks shown on the website must also be known to the AI.
+    expect(facts).toContain("free for guests who booked directly with the hotel for 3 nights or more");
+    expect(facts).toContain("free late check-out until 14:00");
   });
 
   it("has unique room and offer ids", () => {
