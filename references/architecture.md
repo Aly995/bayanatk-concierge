@@ -1,5 +1,8 @@
 # Architecture
 
+How the parts fit together. Tables and content fields: `data-model.md`. How websites
+look: `design-system.md`. Settings and deploy: `project-facts.md`.
+
 ## The flow of one guest message
 
 ```
@@ -49,22 +52,13 @@ Store ── MemoryStore (demo, tests) | SupabaseStore (production)
 
 ## Hotel websites
 
-- **Content**: one JSON document per hotel in `hotel_sites`, validated by `hotelSiteSchema`
-  (`src/lib/site/schema.ts`). Every visible text has `en` and `ar`. Copying, versioning or editing a
-  whole site is one row. The demo hotel's content (`src/data/demo-site.ts`) is checked by a test to
-  agree with the AI assistant's facts, so the website and the chat never contradict each other.
+- **Content**: one JSON document per hotel in `hotel_sites` (fields in `data-model.md`).
 - **Two root layouts**: `src/app/(main)/` (app pages) and `src/app/(site)/site/[slug]/[lang]/`
   (hotel websites). The website layout sets `<html lang dir>` from the URL, so Arabic pages are
-  truly right-to-left, and applies the hotel's brand colours as CSS variables (`bg-hotel`, `text-hotel-accent`).
-- **Sections**: `src/components/site/HomeSections.tsx`, one component per section, in the order of
-  established Madinah hotel sites: hero with a booking bar, room cards, key facts, welcome, facility
-  rows (image + text), offers, Umrah groups, location, questions and policies. A hotel's page is the
-  list in `app/(site)/site/[slug]/[lang]/page.tsx`.
-- **Colours, 60-30-10**: each hotel sets four colours in `brand`. `surface` (about 60%: backgrounds),
-  `primary` (about 30%: header, hero, headings, bands, footer), `accent` (about 10%: the main buttons
-  and small rules only, always with dark text), `ink` (body text). A test checks text contrast.
-- **Photos**: `heroPhoto`, each room's `photo` and each facility's `photo` are optional. Without one,
-  the page shows its drawn illustration, so a hotel can launch before its photo shoot.
+  truly right-to-left, and applies the hotel's colours as CSS variables.
+- **Sections**: `src/components/site/HomeSections.tsx`, one component per section. A hotel's page
+  is the list in `app/(site)/site/[slug]/[lang]/page.tsx`. Order, colours and shapes:
+  `design-system.md`.
 - **Booking requests**: `BookingForm` (browser) → `POST /api/hotels/<slug>/bookings` (rate-limited, zod) →
   `createBooking()` (rules, reference code) → `Store.createBookingRequest`. Staff change status with
   `PATCH /api/hotels/<slug>/bookings/<id>`. No payment is taken.
@@ -73,7 +67,7 @@ Store ── MemoryStore (demo, tests) | SupabaseStore (production)
 
 - `enforceRateLimit()` (`src/lib/http.ts`) limits each visitor (IP) per minute on the chat and booking
   endpoints. It counts per Worker instance, so it is a first line; the hard limit is a Cloudflare rate
-  limiting rule (docs/DEPLOY.md).
+  limiting rule (`docs/DEPLOY.md`).
 - `handleGuestMessage()` stops calling the AI after `MAX_GUEST_MESSAGES_PER_DAY` guest messages in one
   conversation in 24 hours, and hands the chat to staff. Counted from the database, so it holds across instances.
 - `public.purge_old_guest_data()` (migration 0002) deletes old conversations, booking requests and

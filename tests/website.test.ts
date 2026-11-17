@@ -191,14 +191,22 @@ describe("website content: photos, facilities and colours", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("keeps white text readable on the demo hotel's main colour (WCAG AA)", () => {
-    const lum = (hex: string) => {
-      const c = [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
-      return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
-    };
-    const contrast = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
-    expect(contrast("#ffffff", site.brand.primary)).toBeGreaterThanOrEqual(4.5);
-    // Accent buttons carry dark text, never white.
-    expect(contrast(site.brand.ink, site.brand.accent)).toBeGreaterThanOrEqual(4.5);
+  it("keeps text readable on the demo hotel's colours (WCAG AA)", async () => {
+    const { brandContrastProblems, contrastRatio } = await import("@/lib/site/contrast");
+    expect(contrastRatio("#000000", "#ffffff")).toBeCloseTo(21);
+    expect(brandContrastProblems(site.brand)).toEqual([]);
+    // A light main colour fails: white text on it would be unreadable.
+    expect(brandContrastProblems({ ...site.brand, primary: "#c9e4d8" })[0]).toMatch(/white text on the main colour/);
+  });
+});
+
+describe("onboarding: website content SQL", () => {
+  it("builds an upsert by slug and refuses bad slugs or content", async () => {
+    const { buildSiteUpsertSql } = await import("../scripts/site-seed-sql");
+    const sql = buildSiteUpsertSql("al-noor-madinah", DEMO_SITE);
+    expect(sql).toContain("where slug = 'al-noor-madinah'");
+    expect(sql).toContain("on conflict (hotel_id) do update");
+    expect(() => buildSiteUpsertSql("Bad Slug'", DEMO_SITE)).toThrow(/slug/);
+    expect(() => buildSiteUpsertSql("ok-slug", { ...DEMO_SITE, rooms: [] })).toThrow();
   });
 });

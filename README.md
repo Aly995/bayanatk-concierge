@@ -118,7 +118,14 @@ Step by step: [docs/DEPLOY.md](docs/DEPLOY.md). Try the Cloudflare build locally
 
 Before a real hotel goes live, go through [docs/PILOT.md](docs/PILOT.md).
 
-More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [docs/ROADMAP.md](docs/ROADMAP.md) ·
+## Working on this project (people and AI agents)
+
+The repo follows the Interpretable Context Methodology (ICM): start at `CLAUDE.md`
+(what is where), then `CONTEXT.md` (which file to load for a task). Facts live in
+`references/`, shared settings in `_config/`, the step-by-step hotel onboarding in
+`workspaces/hotel-onboarding/`, and a dated log of sessions in `journal/`.
+
+More detail: [references/architecture.md](references/architecture.md) · [docs/ROADMAP.md](docs/ROADMAP.md) ·
 working rules for AI coding tools: [CLAUDE.md](CLAUDE.md).
 
 ---
