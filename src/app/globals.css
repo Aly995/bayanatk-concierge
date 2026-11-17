@@ -22,7 +22,8 @@
  * (see app/(site)/.../layout.tsx), so `bg-hotel`, `text-hotel-accent` etc. follow the hotel.
  */
 @theme inline {
-  --color-hotel: var(--hotel-primary, #0b6e4f);
+  --color-hotel-surface: var(--hotel-surface, #f6f7f4);
+  --color-hotel: var(--hotel-primary, #0b5d45);
   --color-hotel-accent: var(--hotel-accent, #c9a24b);
   --color-hotel-ink: var(--hotel-ink, #12211e);
 }

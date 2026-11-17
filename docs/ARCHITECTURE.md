@@ -56,8 +56,15 @@ Store ── MemoryStore (demo, tests) | SupabaseStore (production)
 - **Two root layouts**: `src/app/(main)/` (app pages) and `src/app/(site)/site/[slug]/[lang]/`
   (hotel websites). The website layout sets `<html lang dir>` from the URL, so Arabic pages are
   truly right-to-left, and applies the hotel's brand colours as CSS variables (`bg-hotel`, `text-hotel-accent`).
-- **Sections**: `src/components/site/HomeSections.tsx`, one component per section. A hotel's page is
-  the list in `app/(site)/site/[slug]/[lang]/page.tsx`.
+- **Sections**: `src/components/site/HomeSections.tsx`, one component per section, in the order of
+  established Madinah hotel sites: hero with a booking bar, room cards, key facts, welcome, facility
+  rows (image + text), offers, Umrah groups, location, questions and policies. A hotel's page is the
+  list in `app/(site)/site/[slug]/[lang]/page.tsx`.
+- **Colours, 60-30-10**: each hotel sets four colours in `brand`. `surface` (about 60%: backgrounds),
+  `primary` (about 30%: header, hero, headings, bands, footer), `accent` (about 10%: the main buttons
+  and small rules only, always with dark text), `ink` (body text). A test checks text contrast.
+- **Photos**: `heroPhoto`, each room's `photo` and each facility's `photo` are optional. Without one,
+  the page shows its drawn illustration, so a hotel can launch before its photo shoot.
 - **Booking requests**: `BookingForm` (browser) → `POST /api/hotels/<slug>/bookings` (rate-limited, zod) →
   `createBooking()` (rules, reference code) → `Store.createBookingRequest`. Staff change status with
   `PATCH /api/hotels/<slug>/bookings/<id>`. No payment is taken.

@@ -20,11 +20,16 @@ export default async function SiteLayout({ children, params }: { children: React
   const found = await findSite(slug);
   const brand = found?.site.brand;
   const vars = brand
-    ? ({ "--hotel-primary": brand.primary, "--hotel-accent": brand.accent, "--hotel-ink": brand.ink } as CSSProperties)
+    ? ({
+        "--hotel-surface": brand.surface,
+        "--hotel-primary": brand.primary,
+        "--hotel-accent": brand.accent,
+        "--hotel-ink": brand.ink,
+      } as CSSProperties)
     : undefined;
   return (
     <html lang={lang} dir={isRtl(lang) ? "rtl" : "ltr"}>
-      <body className="site bg-white font-sans text-[17px] text-hotel-ink antialiased" style={vars}>
+      <body className="site bg-hotel-surface font-sans text-[17px] text-hotel-ink antialiased" style={vars}>
         {children}
       </body>
     </html>
@@ -33,5 +38,5 @@ export default async function SiteLayout({ children, params }: { children: React
 
 export async function generateViewport({ params }: { params: Params }): Promise<Viewport> {
   const found = await findSite((await params).slug);
-  return { themeColor: found?.site.brand.primary ?? "#0b6e4f", width: "device-width", initialScale: 1 };
+  return { themeColor: found?.site.brand.primary ?? "#0b5d45", width: "device-width", initialScale: 1 };
 }

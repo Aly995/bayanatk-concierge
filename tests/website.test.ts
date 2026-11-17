@@ -165,3 +165,40 @@ describe("website helpers", () => {
     expect(retention.ar).toContain("365 يوماً");
   });
 });
+
+describe("website content: photos, facilities and colours", () => {
+  it("still accepts content saved before photos, facilities and the surface colour existed", () => {
+    const { facilities, welcomeTitle, ...older } = DEMO_SITE;
+    void facilities;
+    void welcomeTitle;
+    const olderBrand = { primary: "#0b6e4f", accent: "#c9a24b", ink: "#12211e" };
+    const parsed = hotelSiteSchema.parse({ ...older, brand: olderBrand });
+    expect(parsed.facilities).toEqual([]);
+    expect(parsed.brand.surface).toBe("#f6f7f4");
+  });
+
+  it("accepts HTTPS photos with alt text in both languages, and nothing else", () => {
+    const alt = { en: "Room with a view of the Haram", ar: "غرفة تطل على الحرم" };
+    const withPhoto = (src: string) => ({ ...DEMO_SITE, heroPhoto: { src, alt } });
+    expect(hotelSiteSchema.safeParse(withPhoto("https://images.example.com/hero.jpg")).success).toBe(true);
+    expect(hotelSiteSchema.safeParse(withPhoto("http://images.example.com/hero.jpg")).success).toBe(false);
+    expect(hotelSiteSchema.safeParse({ ...DEMO_SITE, heroPhoto: { src: "https://x.example/a.jpg", alt: { en: "Hero" } } }).success).toBe(false);
+  });
+
+  it("gives every demo facility a unique id and text in both languages", () => {
+    const ids = site.facilities.map((f) => f.id);
+    expect(ids.length).toBeGreaterThanOrEqual(4);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("keeps white text readable on the demo hotel's main colour (WCAG AA)", () => {
+    const lum = (hex: string) => {
+      const c = [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
+    };
+    const contrast = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+    expect(contrast("#ffffff", site.brand.primary)).toBeGreaterThanOrEqual(4.5);
+    // Accent buttons carry dark text, never white.
+    expect(contrast(site.brand.ink, site.brand.accent)).toBeGreaterThanOrEqual(4.5);
+  });
+});

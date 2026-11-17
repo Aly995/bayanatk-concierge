@@ -137,3 +137,32 @@ export function CheckIcon({ className = "size-5" }: { className?: string }) {
     </svg>
   );
 }
+
+/**
+ * Stand-in for a facility photo: the facility's icon on a quiet eight-point-star pattern,
+ * a motif from the geometric tiling found across Madinah's architecture.
+ */
+export function FacilityArt({ icon, className = "" }: { icon: IconName; className?: string }) {
+  const patternId = `stars-${icon}`;
+  return (
+    <div className={`relative flex items-center justify-center overflow-hidden bg-hotel/[0.07] ${className}`} aria-hidden="true">
+      <svg className="absolute inset-0 size-full" focusable="false">
+        <defs>
+          <pattern id={patternId} width="56" height="56" patternUnits="userSpaceOnUse">
+            <path
+              d="M28 8 L33 18 L44 14 L40 25 L50 28 L40 31 L44 42 L33 38 L28 48 L23 38 L12 42 L16 31 L6 28 L16 25 L12 14 L23 18 Z"
+              fill="none"
+              stroke={P}
+              strokeOpacity=".11"
+              strokeWidth="1.5"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+      </svg>
+      <span className="relative flex size-24 items-center justify-center rounded-full bg-white text-hotel shadow-[0_0_0_10px_rgb(255_255_255/0.5)]">
+        <AmenityIcon name={icon} className="size-10" />
+      </span>
+    </div>
+  );
+}

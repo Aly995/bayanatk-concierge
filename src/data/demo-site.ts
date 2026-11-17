@@ -8,7 +8,8 @@ import type { hotelSiteSchema } from "@/lib/site/schema";
  */
 export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
   isDemo: true,
-  brand: { primary: "#0b6e4f", accent: "#c9a24b", ink: "#12211e" },
+  // 60-30-10: off-white surfaces, deep green, gold.
+  brand: { surface: "#f6f7f4", primary: "#0b5d45", accent: "#c9a24b", ink: "#12211e" },
   tagline: {
     en: "Five minutes from the Prophet's Mosque",
     ar: "على بُعد خمس دقائق من المسجد النبوي",
@@ -17,6 +18,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
     en: "A calm, family-run stay in the central area of Madinah, built around the rhythm of prayer: early breakfast, suhoor in Ramadan, Zamzam water on every floor and a team that answers you in your language.",
     ar: "إقامة هادئة في المنطقة المركزية بالمدينة المنورة، مصممة حول أوقات الصلاة: إفطار مبكر، وسحور في رمضان، وماء زمزم في كل طابق، وفريق يرد عليك بلغتك.",
   },
+  welcomeTitle: { en: "Welcome to Dar Al Noor", ar: "أهلاً بكم في دار النور" },
   perks: [
     { en: "Free airport pickup on stays of 3 nights or more", ar: "توصيل مجاني من المطار للإقامات من 3 ليالٍ فأكثر" },
     { en: "Late checkout until 14:00 when available", ar: "مغادرة متأخرة حتى الساعة 2 ظهراً عند التوفر" },
@@ -147,6 +149,62 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
     { icon: "shuttle", label: { en: "Airport transfers", ar: "توصيل من وإلى المطار" } },
     { icon: "family", label: { en: "Family suites", ar: "أجنحة عائلية" } },
     { icon: "accessible", label: { en: "Accessible rooms", ar: "غرف مهيأة" } },
+  ],
+  facilities: [
+    {
+      id: "breakfast",
+      icon: "breakfast",
+      title: { en: "Breakfast after Fajr, suhoor in Ramadan", ar: "إفطار بعد الفجر وسحور في رمضان" },
+      text: {
+        en: "A buffet breakfast is served every day from 04:30 to 10:30 on the first floor. In Ramadan, suhoor is served from 02:00.",
+        ar: "يُقدَّم الإفطار يومياً من الساعة 4:30 حتى 10:30 صباحاً في الطابق الأول، ويُقدَّم السحور في رمضان من الساعة 2:00 فجراً.",
+      },
+    },
+    {
+      id: "haram",
+      icon: "zamzam",
+      title: { en: "Close to the Haram, Zamzam on every floor", ar: "قريب من الحرم وماء زمزم في كل طابق" },
+      text: {
+        en: "The Prophet's Mosque is about five minutes on foot, entering at Gate 25. Zamzam water is available on every floor.",
+        ar: "يبعد المسجد النبوي حوالي خمس دقائق مشياً والدخول من البوابة 25، وماء زمزم متوفر في كل طابق.",
+      },
+    },
+    {
+      id: "transfers",
+      icon: "shuttle",
+      title: { en: "Airport transfers", ar: "التوصيل من وإلى المطار" },
+      text: {
+        en: "SAR 120 per car for up to 4 guests, free when you book directly for 3 nights or more. Book at least 3 hours ahead.",
+        ar: "120 ريالاً للسيارة حتى 4 أشخاص، ومجاناً عند الحجز المباشر من 3 ليالٍ فأكثر. يُرجى الحجز قبل 3 ساعات على الأقل.",
+      },
+    },
+    {
+      id: "families",
+      icon: "family",
+      title: { en: "Rooms for families and small groups", ar: "غرف للعائلات والمجموعات الصغيرة" },
+      text: {
+        en: "Family suites with a separate lounge and quad rooms with four single beds. Cots are available on request.",
+        ar: "أجنحة عائلية بصالة منفصلة وغرف رباعية بأربعة أسرّة مفردة، وسرير الأطفال متوفر عند الطلب.",
+      },
+    },
+    {
+      id: "accessible",
+      icon: "accessible",
+      title: { en: "Step-free rooms", ar: "غرف بلا عتبات" },
+      text: {
+        en: "Accessible rooms next to the lifts, with a roll-in shower and grab rails, for guests using a wheelchair or walking aid.",
+        ar: "غرف مهيأة بجوار المصاعد، بدش بمستوى الأرض ومقابض مساندة، لمستخدمي الكراسي المتحركة أو أدوات المشي.",
+      },
+    },
+    {
+      id: "laundry",
+      icon: "laundry",
+      title: { en: "Same-day laundry", ar: "غسيل في اليوم نفسه" },
+      text: {
+        en: "Hand in your laundry by 11:00 and it comes back the same day by 20:00. The price list is in your room folder.",
+        ar: "سلّم ملابسك قبل الساعة 11:00 صباحاً وتعود إليك في اليوم نفسه قبل الساعة 8:00 مساءً. قائمة الأسعار في ملف الغرفة.",
+      },
+    },
   ],
   faqs: [
     {

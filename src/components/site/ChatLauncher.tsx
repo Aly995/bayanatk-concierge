@@ -52,7 +52,7 @@ export function ChatLauncher(props: {
         <a href={props.whatsappHref} className="rounded-lg border-2 border-hotel/30 py-2.5 text-center font-semibold text-hotel">
           WhatsApp
         </a>
-        <a href={props.bookHref} className="rounded-lg bg-hotel py-2.5 text-center font-semibold text-white">
+        <a href={props.bookHref} className="rounded-lg bg-hotel-accent py-2.5 text-center font-semibold text-hotel-ink">
           {props.labels.bookShort}
         </a>
       </div>

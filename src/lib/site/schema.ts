@@ -17,6 +17,16 @@ export type Localized = z.infer<typeof localized>;
 
 const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 
+/**
+ * A photo slot. Optional everywhere: without a photo the site shows its drawn illustration,
+ * so a hotel can launch before its photo shoot. HTTPS only; alt text in every language.
+ */
+export const photoSchema = z.object({
+  src: z.string().url().startsWith("https://"),
+  alt: localized,
+});
+export type Photo = z.infer<typeof photoSchema>;
+
 export const AMENITY_ICONS = [
   "wifi", "breakfast", "prayer", "zamzam", "laundry", "shuttle", "family", "accessible", "concierge", "parking",
 ] as const;
@@ -33,6 +43,7 @@ export const roomSchema = z.object({
   fromPrice: z.number().int().positive(),
   features: z.array(localized).max(8),
   accessible: z.boolean().default(false),
+  photo: photoSchema.optional(),
 });
 export type Room = z.infer<typeof roomSchema>;
 
@@ -45,10 +56,32 @@ export const offerSchema = z.object({
 });
 export type Offer = z.infer<typeof offerSchema>;
 
+export const facilitySchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]{2,40}$/),
+  icon: z.enum(AMENITY_ICONS),
+  title: localized,
+  text: localized,
+  photo: photoSchema.optional(),
+});
+export type Facility = z.infer<typeof facilitySchema>;
+
 export const hotelSiteSchema = z.object({
-  brand: z.object({ primary: hexColor, accent: hexColor, ink: hexColor }),
+  /**
+   * Colours follow the 60-30-10 rule: `surface` fills about 60% of the page (backgrounds),
+   * `primary` about 30% (header, hero, headings, bands, footer), `accent` about 10%
+   * (main buttons and small highlights only). `ink` is body text.
+   */
+  brand: z.object({
+    surface: hexColor.default("#f6f7f4"),
+    primary: hexColor,
+    accent: hexColor,
+    ink: hexColor,
+  }),
   tagline: localized,
   intro: localized,
+  /** Heading for the welcome section; the text is `intro`. */
+  welcomeTitle: localized.optional(),
+  heroPhoto: photoSchema.optional(),
   /** Reasons to book direct: perks the hotel controls (not a lower price than OTAs). */
   perks: z.array(localized).min(1).max(6),
   location: z.object({
@@ -62,7 +95,10 @@ export const hotelSiteSchema = z.object({
   }),
   rooms: z.array(roomSchema).min(1).max(30),
   offers: z.array(offerSchema).max(10),
+  /** Short labels, used in search engine data. */
   amenities: z.array(z.object({ icon: z.enum(AMENITY_ICONS), label: localized })).max(16),
+  /** Facilities shown as image + text rows on the home page. */
+  facilities: z.array(facilitySchema).max(10).default([]),
   faqs: z.array(z.object({ q: localized, a: localized })).max(30),
   policies: z.object({
     checkIn: z.string().regex(/^\d{2}:\d{2}$/),

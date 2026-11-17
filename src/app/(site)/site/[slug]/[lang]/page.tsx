@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ChatLauncher } from "@/components/site/ChatLauncher";
-import { Facilities, Faq, Groups, Hero, Location, Offers, Perks, Policies, Rooms } from "@/components/site/HomeSections";
+import { Facilities, FaqAndPolicies, Groups, Hero, KeyFacts, Location, Offers, Rooms, Welcome } from "@/components/site/HomeSections";
 import { DemoBanner, hotelName, SiteFooter, SiteHeader, type SiteProps } from "@/components/site/SiteChrome";
+import { todayInSaudi } from "@/lib/booking";
 import { config } from "@/lib/config";
 import { whatsappHref } from "@/lib/site/links";
 import { loadSite } from "@/lib/site/load";
@@ -36,15 +37,15 @@ export default async function HotelHome({ params }: { params: Params }) {
       <DemoBanner {...props} />
       <SiteHeader {...props} />
       <main>
-        <Hero {...props} />
-        <Perks {...props} />
+        <Hero {...props} today={todayInSaudi()} />
         <Rooms {...props} />
+        <KeyFacts {...props} />
+        <Welcome {...props} />
+        <Facilities {...props} />
         <Offers {...props} />
         <Groups {...props} />
         <Location {...props} />
-        <Facilities {...props} />
-        <Faq {...props} />
-        <Policies {...props} />
+        <FaqAndPolicies {...props} />
       </main>
       <SiteFooter {...props} />
       <ChatLauncher

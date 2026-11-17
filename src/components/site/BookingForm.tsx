@@ -55,17 +55,18 @@ export function BookingForm(props: {
   today: string;
   initialRoomId?: string;
   initialGroup?: boolean;
+  /** Dates and guests from the home page's booking bar. */
+  initial?: { checkIn: string; checkOut: string; adults: number; children: number };
   homeHref: string;
   privacyHref: string;
 }) {
   const s = SITE_STRINGS[props.lang].booking;
   const privacyLabel = SITE_STRINGS[props.lang].privacy;
-  const [step, setStep] = useState<Step>(1);
   const [f, setF] = useState<Fields>({
-    checkIn: "",
-    checkOut: "",
-    adults: 2,
-    children: 0,
+    checkIn: props.initial?.checkIn ?? "",
+    checkOut: props.initial?.checkOut ?? "",
+    adults: props.initial?.adults ?? 2,
+    children: props.initial?.children ?? 0,
     isGroup: Boolean(props.initialGroup),
     groupSize: "",
     roomId: props.rooms.some((r) => r.id === props.initialRoomId) ? props.initialRoomId! : "",
@@ -75,6 +76,13 @@ export function BookingForm(props: {
     country: "",
     specialRequests: "",
     consent: false,
+  });
+  // Came from the booking bar with valid dates? Start at choosing a room.
+  const [step, setStep] = useState<Step>(() => {
+    const i = props.initial;
+    if (!i?.checkIn || !i.checkOut || i.checkIn < props.today) return 1;
+    const n = nightsBetween(i.checkIn, i.checkOut);
+    return n >= 1 && n <= MAX_NIGHTS ? 2 : 1;
   });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -345,7 +353,7 @@ export function BookingForm(props: {
       {formError && <p role="alert" className="mt-6 rounded-lg bg-red-50 px-4 py-3 font-semibold text-red-800">{formError}</p>}
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <button type="submit" disabled={sending} className="rounded-lg bg-hotel px-6 py-3.5 font-semibold text-white hover:bg-hotel/90 disabled:opacity-60">
+        <button type="submit" disabled={sending} className="rounded-md bg-hotel-accent px-6 py-3.5 font-semibold text-hotel-ink hover:brightness-105 disabled:opacity-60">
           {step === 3 ? (sending ? s.sending : s.send) : s.next}
         </button>
         {step !== 1 && (

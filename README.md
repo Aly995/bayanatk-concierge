@@ -28,9 +28,10 @@ takes booking requests with no payment, straight to the staff inbox.
   staff replies (which take over from the AI), and a request board: New → In progress → Done.
 - **WhatsApp channel** (`/api/whatsapp`): Meta Cloud API webhook with signature checks,
   duplicate protection and fast responses.
-- **Hotel website** (`/site/<hotel>/en` and `/site/<hotel>/ar`): walk time to the Haram, rooms,
-  offers, Umrah groups, location, facilities, FAQ and policies, with drawn illustrations (no photos
-  needed), schema.org data and language links for search engines. Arabic pages are fully right-to-left.
+- **Hotel website** (`/site/<hotel>/en` and `/site/<hotel>/ar`): hero with a booking bar, room cards,
+  key facts, facilities, offers, Umrah groups, location, FAQ and policies. Colours follow the 60-30-10
+  rule from the hotel's own palette. Photo slots fall back to drawn illustrations until the hotel adds
+  photos. Includes schema.org data and language links for search engines; Arabic pages are fully right-to-left.
 - **Booking requests** (`/site/<hotel>/<lang>/book`): three short steps, no account, no card. Staff
   confirm or decline in the inbox and message the guest on WhatsApp.
 - **Pilot report** in the staff inbox: chats answered by AI, chats passed to staff, staff reply time,
