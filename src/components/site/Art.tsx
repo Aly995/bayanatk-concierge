@@ -3,7 +3,7 @@
  * Colours come from the hotel's brand variables, so every hotel's art matches its site.
  * All art is decorative: aria-hidden, with the facts given in text next to it.
  */
-import type { AMENITY_ICONS, Room } from "@/lib/site/schema";
+import type { Room } from "@/lib/site/schema";
 
 const P = "var(--hotel-primary)";
 const A = "var(--hotel-accent)";
@@ -104,65 +104,5 @@ export function RoomView({ view, className = "" }: { view: Room["view"]; classNa
       <path d="M0 0 H34 Q 22 120 30 240 H0 Z" fill={A} fillOpacity=".35" />
       <path d="M200 0 H166 Q 178 120 170 240 H200 Z" fill={A} fillOpacity=".35" />
     </svg>
-  );
-}
-
-type IconName = (typeof AMENITY_ICONS)[number];
-
-const ICON_PATHS: Record<IconName, string> = {
-  wifi: "M3 9.5a13 13 0 0 1 18 0M6 13a8.5 8.5 0 0 1 12 0M9 16.5a4 4 0 0 1 6 0M12 20h.01",
-  breakfast: "M4 10h12v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 11h1.5a2.5 2.5 0 0 1 0 5H16M8 3v4M12 3v4",
-  prayer: "M6 21V11a6 6 0 0 1 12 0v10M4 21h16M12 5V2M9.5 21v-4a2.5 2.5 0 0 1 5 0v4",
-  zamzam: "M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11zM9.5 15a2.5 2.5 0 0 0 2.5 2.5",
-  laundry: "M8 3 4 6l2 4 2-1v12h8V9l2 1 2-4-4-3a4 4 0 0 1-8 0z",
-  shuttle: "M3 16V9a2 2 0 0 1 2-2h11l4 5v4M3 16h18M7 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM3 12h17",
-  family: "M8 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM17 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM3 21v-6a5 5 0 0 1 10 0v6M13 21v-4a4 4 0 0 1 8 0v4",
-  accessible: "M12 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM11 8v6h5l2 5M11 11h5M8.5 11.5a5 5 0 1 0 6.8 6.8",
-  concierge: "M4 18h16M5 18a7 7 0 0 1 14 0M12 8V6M10 6h4M2 21h20",
-  parking: "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM10 17V7h3a3 3 0 0 1 0 6h-3",
-};
-
-export function AmenityIcon({ name, className = "size-6" }: { name: IconName; className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-      <path d={ICON_PATHS[name]} />
-    </svg>
-  );
-}
-
-export function CheckIcon({ className = "size-5" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-      <path d="M4 10.5 8 14.5 16 6" />
-    </svg>
-  );
-}
-
-/**
- * Stand-in for a facility photo: the facility's icon on a quiet eight-point-star pattern,
- * a motif from the geometric tiling found across Madinah's architecture.
- */
-export function FacilityArt({ icon, className = "" }: { icon: IconName; className?: string }) {
-  const patternId = `stars-${icon}`;
-  return (
-    <div className={`relative flex items-center justify-center overflow-hidden bg-hotel/[0.07] ${className}`} aria-hidden="true">
-      <svg className="absolute inset-0 size-full" focusable="false">
-        <defs>
-          <pattern id={patternId} width="56" height="56" patternUnits="userSpaceOnUse">
-            <path
-              d="M28 8 L33 18 L44 14 L40 25 L50 28 L40 31 L44 42 L33 38 L28 48 L23 38 L12 42 L16 31 L6 28 L16 25 L12 14 L23 18 Z"
-              fill="none"
-              stroke={P}
-              strokeOpacity=".11"
-              strokeWidth="1.5"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-      </svg>
-      <span className="relative flex size-24 items-center justify-center rounded-full bg-white text-hotel shadow-[0_0_0_10px_rgb(255_255_255/0.5)]">
-        <AmenityIcon name={icon} className="size-10" />
-      </span>
-    </div>
   );
 }

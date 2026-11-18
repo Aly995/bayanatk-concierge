@@ -1,15 +1,21 @@
 import type { z } from "zod";
 import type { hotelSiteSchema } from "@/lib/site/schema";
+import { DEMO_IMAGES } from "./demo-images";
+
+type SiteInput = z.input<typeof hotelSiteSchema>;
+
+/** Adds the photo from demo-images.ts when one is set; otherwise the drawing shows. */
+const withPhoto = <T extends object>(item: T, p: (typeof DEMO_IMAGES.rooms)[string]) => (p ? { ...item, photo: p } : item);
 
 /**
  * Website content for the fictional demo hotel (Dar Al Noor).
  * Facts here match src/data/demo-hotel.ts, so the website and the AI assistant agree.
  * Prices, phone and email are samples. `isDemo` makes the site say so.
  */
-export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
+export const DEMO_SITE: SiteInput = {
   isDemo: true,
-  // 60-30-10: off-white surfaces, deep green, gold.
-  brand: { surface: "#f6f7f4", primary: "#0b5d45", accent: "#c9a24b", ink: "#12211e" },
+  // 60-30-10: warm ivory surfaces, deep green, brass (used sparingly).
+  brand: { surface: "#f7f3ec", primary: "#0b5d45", accent: "#c9a45c", ink: "#12211e" },
   tagline: {
     en: "Five minutes from the Prophet's Mosque",
     ar: "على بُعد خمس دقائق من المسجد النبوي",
@@ -18,6 +24,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
     en: "A calm, family-run stay in the central area of Madinah, built around the rhythm of prayer: early breakfast, suhoor in Ramadan, Zamzam water on every floor and a team that answers you in your language.",
     ar: "إقامة هادئة في المنطقة المركزية بالمدينة المنورة، مصممة حول أوقات الصلاة: إفطار مبكر، وسحور في رمضان، وماء زمزم في كل طابق، وفريق يرد عليك بلغتك.",
   },
+  ...(DEMO_IMAGES.hero ? { heroPhoto: DEMO_IMAGES.hero } : {}),
   welcomeTitle: { en: "Welcome to Dar Al Noor", ar: "أهلاً بكم في دار النور" },
   perks: [
     { en: "Free airport pickup on stays of 3 nights or more", ar: "توصيل مجاني من المطار للإقامات من 3 ليالٍ فأكثر" },
@@ -34,7 +41,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
     airportKm: 18,
     trainStationKm: 7,
   },
-  rooms: [
+  rooms: ([
     {
       id: "haram-view-double",
       name: { en: "Haram View Double", ar: "غرفة مزدوجة بإطلالة على الحرم" },
@@ -110,7 +117,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
       ],
       accessible: true,
     },
-  ],
+  ] satisfies SiteInput["rooms"]).map((room) => withPhoto(room, DEMO_IMAGES.rooms[room.id] ?? null)),
   offers: [
     {
       id: "last-ten-nights",
@@ -150,7 +157,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
     { icon: "family", label: { en: "Family suites", ar: "أجنحة عائلية" } },
     { icon: "accessible", label: { en: "Accessible rooms", ar: "غرف مهيأة" } },
   ],
-  facilities: [
+  facilities: ([
     {
       id: "breakfast",
       icon: "breakfast",
@@ -205,7 +212,7 @@ export const DEMO_SITE: z.input<typeof hotelSiteSchema> = {
         ar: "سلّم ملابسك قبل الساعة 11:00 صباحاً وتعود إليك في اليوم نفسه قبل الساعة 8:00 مساءً. قائمة الأسعار في ملف الغرفة.",
       },
     },
-  ],
+  ] satisfies SiteInput["facilities"]).map((facility) => withPhoto(facility, DEMO_IMAGES.facilities[facility.id] ?? null)),
   faqs: [
     {
       q: { en: "How far is the hotel from the Prophet's Mosque?", ar: "كم تبعد المسافة عن المسجد النبوي؟" },

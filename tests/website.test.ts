@@ -174,7 +174,7 @@ describe("website content: photos, facilities and colours", () => {
     const olderBrand = { primary: "#0b6e4f", accent: "#c9a24b", ink: "#12211e" };
     const parsed = hotelSiteSchema.parse({ ...older, brand: olderBrand });
     expect(parsed.facilities).toEqual([]);
-    expect(parsed.brand.surface).toBe("#f6f7f4");
+    expect(parsed.brand.surface).toBe("#f7f3ec");
   });
 
   it("accepts HTTPS photos with alt text in both languages, and nothing else", () => {
@@ -208,5 +208,30 @@ describe("onboarding: website content SQL", () => {
     expect(sql).toContain("on conflict (hotel_id) do update");
     expect(() => buildSiteUpsertSql("Bad Slug'", DEMO_SITE)).toThrow(/slug/);
     expect(() => buildSiteUpsertSql("ok-slug", { ...DEMO_SITE, rooms: [] })).toThrow();
+  });
+});
+
+describe("photos", () => {
+  it("serves optimised local photos in three widths, and outside photos as given", async () => {
+    const { imageSources } = await import("@/lib/site/images");
+    expect(imageSources("/images/room-haram-view")).toEqual({
+      src: "/images/room-haram-view-1280.webp",
+      srcSet: "/images/room-haram-view-640.webp 640w, /images/room-haram-view-1280.webp 1280w, /images/room-haram-view-1920.webp 1920w",
+    });
+    expect(imageSources("https://cdn.example.com/a.jpg")).toEqual({ src: "https://cdn.example.com/a.jpg" });
+  });
+
+  it("accepts /images/<name> photo paths but not other local paths", () => {
+    const alt = { en: "Room", ar: "غرفة" };
+    const ok = hotelSiteSchema.safeParse({ ...DEMO_SITE, heroPhoto: { src: "/images/hero-haram-dusk", alt } });
+    const bad = hotelSiteSchema.safeParse({ ...DEMO_SITE, heroPhoto: { src: "/etc/passwd", alt } });
+    expect(ok.success).toBe(true);
+    expect(bad.success).toBe(false);
+  });
+
+  it("names a photo slot for every demo room and facility", async () => {
+    const { DEMO_IMAGES } = await import("@/data/demo-images");
+    expect(Object.keys(DEMO_IMAGES.rooms).sort()).toEqual(site.rooms.map((r) => r.id).sort());
+    expect(Object.keys(DEMO_IMAGES.facilities).sort()).toEqual(site.facilities.map((f) => f.id).sort());
   });
 });

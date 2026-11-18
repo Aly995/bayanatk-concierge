@@ -28,13 +28,13 @@ export const TOOL_DEFINITIONS = [
   {
     name: "create_service_request",
     description:
-      "Create a request for hotel staff when the guest asks for a service: housekeeping, laundry, maintenance, transport (taxi, airport), late check-out, or extra items (towels, pillows, water). Ask for the room number first if you don't know it.",
+      "Create a request for hotel staff when the guest asks for a service: housekeeping, laundry, maintenance, transport (taxi, airport), late check-out, or extra items (towels, pillows, water). Only when the guest wants the service, not when they just ask about it. If the guest is staying now and you don't know the room number, ask for it first; arriving guests have no room yet, so put their arrival details in `details` instead.",
     input_schema: {
       type: "object" as const,
       properties: {
         type: { type: "string", enum: [...REQUEST_TYPES] },
         details: { type: "string", description: "What the guest wants, with time if given. Write in English for staff." },
-        room_number: { type: "string", description: "Guest's room number, if known." },
+        room_number: { type: "string", description: "Guest's room number, if they are staying now. Leave out for arriving guests." },
       },
       required: ["type", "details"],
     },

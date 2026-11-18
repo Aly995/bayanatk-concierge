@@ -62,7 +62,7 @@ export default async function BookPage({ params, searchParams }: { params: Param
             />
           </div>
         </div>
-        <aside className="h-fit space-y-4 rounded-xl bg-white p-6 text-[15px] ring-1 ring-hotel-ink/10">
+        <aside className="h-fit space-y-4 rounded-card bg-hotel-paper p-6 text-[15px] ring-1 ring-hotel-ink/10">
           <p className="font-bold text-hotel">{hotelName(hotel, lang)}</p>
           <p>{s.walk(site.location.walkMinutesToHaram)}</p>
           <p>

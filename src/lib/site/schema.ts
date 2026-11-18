@@ -22,7 +22,12 @@ const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/);
  * so a hotel can launch before its photo shoot. HTTPS only; alt text in every language.
  */
 export const photoSchema = z.object({
-  src: z.string().url().startsWith("https://"),
+  /**
+   * Either a full HTTPS address, or a photo optimised into this app with
+   * `npm run images:optimize`: `/images/<name>` (no extension), for example
+   * `/images/room-haram-view`. See public/images/README.md.
+   */
+  src: z.union([z.string().url().startsWith("https://"), z.string().regex(/^\/images\/[a-z0-9-]{2,60}$/)]),
   alt: localized,
 });
 export type Photo = z.infer<typeof photoSchema>;
@@ -72,7 +77,7 @@ export const hotelSiteSchema = z.object({
    * (main buttons and small highlights only). `ink` is body text.
    */
   brand: z.object({
-    surface: hexColor.default("#f6f7f4"),
+    surface: hexColor.default("#f7f3ec"),
     primary: hexColor,
     accent: hexColor,
     ink: hexColor,
@@ -97,6 +102,23 @@ export const hotelSiteSchema = z.object({
   offers: z.array(offerSchema).max(10),
   /** Short labels, used in search engine data. */
   amenities: z.array(z.object({ icon: z.enum(AMENITY_ICONS), label: localized })).max(16),
+  /**
+   * Real guest ratings from public review sites, entered by us from the hotel's profiles.
+   * Never invented. Without ratings, the demo shows a labelled placeholder and real
+   * hotels show nothing.
+   */
+  ratings: z
+    .array(
+      z.object({
+        source: z.string().min(2).max(40),
+        score: z.number().min(0).max(10),
+        outOf: z.union([z.literal(5), z.literal(10)]),
+        count: z.number().int().min(1),
+        url: z.string().url().startsWith("https://"),
+      }),
+    )
+    .max(4)
+    .default([]),
   /** Facilities shown as image + text rows on the home page. */
   facilities: z.array(facilitySchema).max(10).default([]),
   faqs: z.array(z.object({ q: localized, a: localized })).max(30),

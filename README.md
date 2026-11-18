@@ -28,10 +28,13 @@ takes booking requests with no payment, straight to the staff inbox.
   staff replies (which take over from the AI), and a request board: New → In progress → Done.
 - **WhatsApp channel** (`/api/whatsapp`): Meta Cloud API webhook with signature checks,
   duplicate protection and fast responses.
-- **Hotel website** (`/site/<hotel>/en` and `/site/<hotel>/ar`): hero with a booking bar, room cards,
-  key facts, facilities, offers, Umrah groups, location, FAQ and policies. Colours follow the 60-30-10
-  rule from the hotel's own palette. Photo slots fall back to drawn illustrations until the hotel adds
-  photos. Includes schema.org data and language links for search engines; Arabic pages are fully right-to-left.
+- **Hotel website** (`/site/<hotel>/en` and `/site/<hotel>/ar`): hero with a booking bar (date-range
+  picker with Hijri dates), key facts, room cards with prices, a walk map to the Haram, facilities,
+  guest ratings (real ones only), offers, Umrah groups, FAQ and policies, and one floating button for
+  WhatsApp and the AI assistant. Colours follow the 60-30-10 rule from the hotel's own palette; design
+  tokens and components are described in `references/design-system.md`. Photo slots fall back to drawn
+  illustrations until the hotel adds photos. Includes schema.org data and language links for search
+  engines; Arabic pages are fully right-to-left.
 - **Booking requests** (`/site/<hotel>/<lang>/book`): three short steps, no account, no card. Staff
   confirm or decline in the inbox and message the guest on WhatsApp.
 - **Pilot report** in the staff inbox: chats answered by AI, chats passed to staff, staff reply time,
@@ -98,6 +101,8 @@ Copy `.env.example` to `.env.local` and fill in what you have. Each part switche
 | `npm run typecheck` | TypeScript checks |
 | `npm run cf:build` | Build for Cloudflare Workers (production) |
 | `npm run seed:site` | Regenerate `supabase/seed_site.sql` after editing `src/data/demo-site.ts` |
+| `npm run site:check -- <file>` | Check a hotel's website content (schema, ids, colour contrast) |
+| `npm run images:optimize` | Turn photos in `public/images/originals/` into web sizes (`/images/<name>`) |
 
 ## Deploying
 

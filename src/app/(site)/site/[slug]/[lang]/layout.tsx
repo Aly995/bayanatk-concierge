@@ -1,9 +1,15 @@
-import type { CSSProperties } from "react";
 import type { Viewport } from "next";
 // Fonts are bundled with the app (self-hosted): no request to Google at build or run time.
 import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource-variable/readex-pro";
+import "@fontsource-variable/fraunces";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
+import "@fontsource/ibm-plex-sans-arabic/700.css";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/700.css";
 import "../../../../globals.css";
+import { brandStyle } from "@/lib/site/brand-style";
 import { findSite, isSiteLanguage } from "@/lib/site/load";
 import { isRtl } from "@/lib/site/strings";
 
@@ -18,18 +24,9 @@ export default async function SiteLayout({ children, params }: { children: React
   const lang = isSiteLanguage(rawLang) ? rawLang : "en";
   // Missing hotels are handled by the page (notFound); the layout just falls back to default colours.
   const found = await findSite(slug);
-  const brand = found?.site.brand;
-  const vars = brand
-    ? ({
-        "--hotel-surface": brand.surface,
-        "--hotel-primary": brand.primary,
-        "--hotel-accent": brand.accent,
-        "--hotel-ink": brand.ink,
-      } as CSSProperties)
-    : undefined;
   return (
     <html lang={lang} dir={isRtl(lang) ? "rtl" : "ltr"}>
-      <body className="site bg-hotel-surface font-sans text-[17px] text-hotel-ink antialiased" style={vars}>
+      <body className="site bg-hotel-surface font-sans text-[17px] text-hotel-ink antialiased" style={brandStyle(found?.site.brand)}>
         {children}
       </body>
     </html>

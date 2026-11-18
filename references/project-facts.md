@@ -9,7 +9,7 @@ Secrets never appear here: setting names only.
 |------|--------|
 | Framework | Next.js 16 (App Router), React 19, TypeScript strict |
 | Styling | Tailwind CSS v4 (`@theme` tokens in `src/app/globals.css`) |
-| Fonts | Plus Jakarta Sans and Readex Pro, self-hosted via `@fontsource-variable` |
+| Fonts | Plus Jakarta Sans, Fraunces (Latin headings), IBM Plex Sans Arabic, Amiri (Arabic headings), Noto Nastaliq Urdu; all self-hosted via fontsource |
 | Database | Supabase (Postgres with row level security) |
 | AI | Claude via the Anthropic SDK (`src/lib/ai/claude.ts`); offline mock when no key |
 | Validation | zod |

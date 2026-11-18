@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
-import { ChatLauncher } from "@/components/site/ChatLauncher";
-import { Facilities, FaqAndPolicies, Groups, Hero, KeyFacts, Location, Offers, Rooms, Welcome } from "@/components/site/HomeSections";
+import {
+  Facilities,
+  FaqAndPolicies,
+  Groups,
+  GuestRatings,
+  Hero,
+  Offers,
+  Rooms,
+  WalkToHaram,
+  Welcome,
+} from "@/components/site/HomeSections";
+import { FloatingContactButton } from "@/components/site/ui/FloatingContactButton";
 import { DemoBanner, hotelName, SiteFooter, SiteHeader, type SiteProps } from "@/components/site/SiteChrome";
 import { todayInSaudi } from "@/lib/booking";
 import { config } from "@/lib/config";
 import { whatsappHref } from "@/lib/site/links";
 import { loadSite } from "@/lib/site/load";
 import { pick } from "@/lib/site/schema";
-import { hotelJsonLd, jsonForScript, languageAlternates, sitePath } from "@/lib/site/seo";
+import { hotelJsonLd, jsonForScript, languageAlternates } from "@/lib/site/seo";
 import { SITE_STRINGS } from "@/lib/site/strings";
 
 type Params = Promise<{ slug: string; lang: string }>;
@@ -39,28 +49,16 @@ export default async function HotelHome({ params }: { params: Params }) {
       <main>
         <Hero {...props} today={todayInSaudi()} />
         <Rooms {...props} />
-        <KeyFacts {...props} />
+        <WalkToHaram {...props} />
         <Welcome {...props} />
         <Facilities {...props} />
+        <GuestRatings {...props} />
         <Offers {...props} />
         <Groups {...props} />
-        <Location {...props} />
         <FaqAndPolicies {...props} />
       </main>
       <SiteFooter {...props} />
-      <ChatLauncher
-        slug={hotel.slug}
-        whatsappHref={whatsappHref(site.contact.whatsapp)}
-        bookHref={sitePath(hotel.slug, lang, "book")}
-        labels={{
-          askUs: s.askUs,
-          askShort: s.askShort,
-          bookShort: s.bookShort,
-          closeChat: s.closeChat,
-          whatsapp: s.whatsapp,
-          chatTitle: s.chatTitle(hotelName(hotel, lang)),
-        }}
-      />
+      <FloatingContactButton lang={lang} slug={hotel.slug} whatsappHref={whatsappHref(site.contact.whatsapp)} hotelName={hotelName(hotel, lang)} />
     </>
   );
 }

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { bookingInput, MAX_NIGHTS, nightsBetween, type BookingError } from "@/lib/booking";
 import type { SiteLanguage } from "@/lib/site/schema";
 import { formatPrice, SITE_STRINGS } from "@/lib/site/strings";
+import { DateRangePicker } from "./ui/DateRangePicker";
 
 export type BookableRoom = { id: string; name: string; maxGuests: number; fromPrice: number };
 
@@ -138,7 +139,12 @@ export function BookingForm(props: {
     const first = Object.keys(e)[0];
     if (first) {
       // Focus the first field with a problem after React renders the messages.
-      requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus());
+      requestAnimationFrame(() =>
+        (
+          formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`) ??
+          formRef.current?.querySelector<HTMLElement>(`[data-field~="${first}"] button`)
+        )?.focus(),
+      );
       return false;
     }
     return true;
@@ -207,7 +213,7 @@ export function BookingForm(props: {
       <div className="max-w-xl" role="status">
         <h2 ref={headingRef} tabIndex={-1} className="text-3xl font-bold outline-none">{s.doneTitle}</h2>
         <p className="mt-3 text-lg">{s.doneBody}</p>
-        <p dir="ltr" className="mt-4 inline-block rounded-lg bg-surface px-5 py-3 font-mono text-3xl font-bold tracking-widest text-hotel">
+        <p dir="ltr" className="mt-4 inline-block rounded-control bg-surface px-5 py-3 font-mono text-3xl font-bold tracking-widest text-hotel">
           {reference}
         </p>
         <p className="mt-8">
@@ -217,7 +223,7 @@ export function BookingForm(props: {
     );
   }
 
-  const field = "mt-1.5 block w-full rounded-lg border border-hotel-ink/25 bg-white px-3.5 py-3 text-[17px] outline-none focus:border-hotel focus:ring-2 focus:ring-hotel/25 aria-[invalid=true]:border-red-700";
+  const field = "mt-1.5 block w-full rounded-control border border-hotel-ink/25 bg-hotel-paper px-3.5 py-3 text-[17px] outline-none focus:border-hotel focus:ring-2 focus:ring-hotel/25 aria-[invalid=true]:border-red-700";
   const label = "block font-semibold";
   const hint = "mt-1 block text-[15px] text-hotel-ink/65";
   const err = (key: keyof Fields) =>
@@ -238,21 +244,23 @@ export function BookingForm(props: {
 
       {step === 1 && (
         <div className="mt-6 space-y-5">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label className={label}>
-              {s.checkIn}
-              <input type="date" min={props.today} value={f.checkIn} onChange={(e) => set("checkIn", e.target.value)} className={field} {...aria("checkIn")} />
-              {err("checkIn")}
-            </label>
-            <label className={label}>
-              {s.checkOut}
-              <input type="date" min={f.checkIn || props.today} value={f.checkOut} onChange={(e) => set("checkOut", e.target.value)} className={field} {...aria("checkOut")} />
-              {err("checkOut")}
-            </label>
+          <div data-field="checkIn checkOut">
+            <DateRangePicker
+              lang={props.lang}
+              today={props.today}
+              value={{ start: f.checkIn || null, end: f.checkOut || null }}
+              onChange={(r) => {
+                set("checkIn", r.start ?? "");
+                set("checkOut", r.end ?? "");
+              }}
+              invalid={Boolean(errors.checkIn || errors.checkOut)}
+              describedBy={[errors.checkIn ? "checkIn-error" : "", errors.checkOut ? "checkOut-error" : ""].filter(Boolean).join(" ") || undefined}
+            />
+            {err("checkIn")}
+            {err("checkOut")}
           </div>
-          {nights > 0 && nights <= MAX_NIGHTS && <p className="text-hotel-ink/70">{s.nights(nights)}</p>}
 
-          <label className="flex items-start gap-3 rounded-lg bg-surface p-4">
+          <label className="flex items-start gap-3 rounded-control bg-surface p-4">
             <input type="checkbox" checked={f.isGroup} onChange={(e) => set("isGroup", e.target.checked)} className="mt-1 size-5 accent-[var(--hotel-primary)]" />
             <span className="font-semibold">{s.isGroup}</span>
           </label>
@@ -293,7 +301,7 @@ export function BookingForm(props: {
               return (
                 <label
                   key={room.id}
-                  className={`flex cursor-pointer items-start gap-3 rounded-lg border-2 p-4 ${f.roomId === room.id ? "border-hotel bg-hotel/5" : "border-hotel-ink/15"} ${tooSmall ? "opacity-60" : ""}`}
+                  className={`flex cursor-pointer items-start gap-3 rounded-control border-2 p-4 ${f.roomId === room.id ? "border-hotel bg-hotel/5" : "border-hotel-ink/15"} ${tooSmall ? "opacity-60" : ""}`}
                 >
                   <input type="radio" name="roomId" value={room.id} checked={f.roomId === room.id} onChange={() => set("roomId", room.id)} className="mt-1 size-5 accent-[var(--hotel-primary)]" />
                   <span className="min-w-0 flex-1">
@@ -350,10 +358,10 @@ export function BookingForm(props: {
         </div>
       )}
 
-      {formError && <p role="alert" className="mt-6 rounded-lg bg-red-50 px-4 py-3 font-semibold text-red-800">{formError}</p>}
+      {formError && <p role="alert" className="mt-6 rounded-control bg-red-50 px-4 py-3 font-semibold text-red-800">{formError}</p>}
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <button type="submit" disabled={sending} className="rounded-md bg-hotel-accent px-6 py-3.5 font-semibold text-hotel-ink hover:brightness-105 disabled:opacity-60">
+        <button type="submit" disabled={sending} className="rounded-control bg-hotel-accent px-6 py-3.5 font-semibold text-hotel-ink hover:brightness-105 disabled:opacity-60">
           {step === 3 ? (sending ? s.sending : s.send) : s.next}
         </button>
         {step !== 1 && (

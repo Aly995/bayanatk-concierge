@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from "next";
 // Fonts are bundled with the app (self-hosted): no request to Google at build or run time.
 import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource-variable/readex-pro";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
+import "@fontsource/ibm-plex-sans-arabic/700.css";
+// Urdu in the guest chat (suggestion chips and replies) uses Nastaliq.
+import "@fontsource/noto-nastaliq-urdu/400.css";
 import "../globals.css";
 
 export const metadata: Metadata = {
