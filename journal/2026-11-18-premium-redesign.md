@@ -32,6 +32,8 @@ and fix the AI asking for a room number when a guest only asked about the airpor
 - On phones the floating button appears after a short scroll, so it does not cover the
   booking bar on the first screen.
 - The facts-first rule is a behaviour rule in the prompt; prices stay in the hotel's facts.
+- The full header nav shows from 1280px; narrower screens (including 1024px laptops and
+  tablets) use the Menu button, because the nav did not fit at 1024px.
 
 ## Open
 - Stock photos: Ali to choose; then add them to `public/images/originals/` and

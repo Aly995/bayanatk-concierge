@@ -41,20 +41,20 @@ export function SiteHeader({ hotel, lang, s }: SiteProps) {
         <Link href={home} className="min-w-0 truncate font-display text-xl font-medium">
           {hotelName(hotel, lang)}
         </Link>
-        <nav aria-label={s.sectionsLabel} className="ms-auto hidden gap-5 text-[15px] lg:flex">
+        <nav aria-label={s.sectionsLabel} className="ms-auto hidden gap-5 text-[15px] xl:flex">
           {links.map((l) => (
             <a key={l.href} href={l.href} className="text-hotel-on-primary/85 underline-offset-8 hover:text-hotel-on-primary hover:underline">
               {l.label}
             </a>
           ))}
         </nav>
-        <a href={sitePath(hotel.slug, other)} hrefLang={other} lang={other} className="ms-auto shrink-0 text-[15px] hover:underline lg:ms-0">
+        <a href={sitePath(hotel.slug, other)} hrefLang={other} lang={other} className="ms-auto shrink-0 text-[15px] hover:underline xl:ms-0">
           {s.otherLangName}
         </a>
         <Link href={sitePath(hotel.slug, lang, "book")} className={`${accentButton} shrink-0 px-4 py-2 text-[15px] max-sm:hidden`}>
           {s.book}
         </Link>
-        <details className="group relative lg:hidden">
+        <details className="group relative xl:hidden">
           <summary className="cursor-pointer list-none rounded-control border border-hotel-on-primary/30 px-3 py-1.5 text-[15px] [&::-webkit-details-marker]:hidden">
             {s.menu}
           </summary>
