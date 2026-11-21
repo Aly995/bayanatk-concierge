@@ -35,17 +35,20 @@ Rules:
 
 ## Type
 
-All fonts are self-hosted (fontsource packages); no browser fallback font shows, including
-in the chat.
+One typeface, as in the Nusuk app and nusuk.sa (Ministry of Hajj and Umrah): **IBM Plex Sans
+Arabic**, self-hosted (fontsource, Open Font License). It has matching Latin letters, so Arabic
+and English pages share one voice. No other font loads, so no browser fallback font shows.
 
-| Use | Latin | Arabic | Urdu |
-|-----|-------|--------|------|
-| Headings (`font-display`) | Fraunces | Amiri | (body font) |
-| Body and interface | Plus Jakarta Sans | IBM Plex Sans Arabic | Noto Nastaliq Urdu (via `lang="ur"`) |
+| Use | Font | Weight |
+|-----|------|--------|
+| Section headings, room names, logo (`font-display`) | IBM Plex Sans Arabic | SemiBold 600 |
+| Hero headline | IBM Plex Sans Arabic | Medium 500 (large size) |
+| Body and interface (`font-sans`) | IBM Plex Sans Arabic | Regular 400, buttons 600 |
+| Urdu text (`lang="ur"`) | Noto Nastaliq Urdu | 400 (Urdu readers expect Nastaliq) |
 
-Stacks list the Latin face first and the Arabic face second, so mixed text picks the right
-font per letter. Hero heading is light (`font-normal`), other headings medium. Body 17px,
-lines under about 75 characters.
+`font-display` stays a separate token so a hotel brand can give headings another face later.
+Arabic headings are never letter-spaced (`--tracking-display` is 0 for `:lang(ar)`). Body 17px,
+lines under about 75 characters. Nusuk's own display face ("Saud Hajj") is private and not used.
 
 ## Components (`src/components/site/ui/`)
 
@@ -68,8 +71,8 @@ Date logic lives in `src/lib/site/dates.ts` (tested in `tests/dates.test.ts`).
 ## Home page order
 
 1. Demo banner (demo hotel only), header on the main colour
-2. Hero: light display heading, gate, book-direct perks, arched image (or drawing), the
-   booking bar, then the key facts strip hanging over the hero's bottom edge
+2. Hero: headline, gate, book-direct perks, the hero photo (or drawing) in an arched window,
+   the booking bar, then the key facts strip hanging over the hero's bottom edge
 3. Rooms: arched cards with 3 to 4 amenity icons, "From SAR ___ / night" and Request this room
 4. The walk to the Haram: address, train and airport, Google Maps link, walk map
 5. Welcome (pattern watermark)
@@ -90,7 +93,10 @@ Drawings stand in until a hotel has photos. To add photos:
    `-1920.webp`.
 3. Point the content at `/images/<name>` (the demo uses `src/data/demo-images.ts`; real
    hotels set `heroPhoto` / `photo` in their site content). HTTPS URLs work too.
-4. Give alt text in both languages. Hero and facilities landscape, rooms portrait (4:5).
+4. Give alt text in both languages. If the subject is off-centre, add a focus point
+   (`focus: { x, y }`, percent from left and top) so the arch and card crops keep it in view.
+5. Only licensed photos: never a watermarked stock preview. Originals stay out of git
+   (`public/images/originals/` is ignored); only the WebP sizes are committed.
 
 `SitePhoto` serves the right size with `srcset`; the hero loads first, others lazily.
 

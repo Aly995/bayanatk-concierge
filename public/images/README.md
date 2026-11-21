@@ -7,5 +7,9 @@
 3. Use `/images/<name>` (no size, no extension) as the photo `src` in the hotel's content.
    For the demo hotel: `src/data/demo-images.ts`.
 
-Sizes: hero landscape at least 1920 px wide; rooms portrait 4:5 at least 1280 px wide;
-facilities landscape 16:10. Only photos the hotel owns or has a licence for.
+Sizes: hero and rooms show in portrait arches (5:6 and 4:5), at least 1280 px wide;
+facilities landscape 16:10. Add a `focus` point in the content when the subject is off-centre.
+
+Only photos the hotel owns or has a licence for; never a watermarked stock preview.
+`originals/` is not committed to git (size and licences): keep the originals in the hotel's
+own storage. The optimised WebP files here are committed.

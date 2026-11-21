@@ -11,7 +11,7 @@ import {
   validateBooking,
   type BookingInput,
 } from "@/lib/booking";
-import { hotelSiteSchema } from "@/lib/site/schema";
+import { hotelSiteSchema, photoSchema } from "@/lib/site/schema";
 import { MemoryStore } from "@/lib/store/memory";
 
 const site = hotelSiteSchema.parse(DEMO_SITE);
@@ -32,6 +32,15 @@ const base: BookingInput = {
   specialRequests: "Near the lift please",
   consent: true,
 };
+
+describe("photo focus point", () => {
+  it("accepts a focus point in percent and rejects one outside the photo", () => {
+    const base = { src: "/images/room-two-beds", alt: { en: "Room", ar: "غرفة" } };
+    expect(photoSchema.safeParse({ ...base, focus: { x: 55, y: 50 } }).success).toBe(true);
+    expect(photoSchema.safeParse({ ...base, focus: { x: 120, y: 50 } }).success).toBe(false);
+    expect(photoSchema.safeParse(base).success).toBe(true);
+  });
+});
 
 describe("demo website content", () => {
   it("is valid against the site schema", () => {

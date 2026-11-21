@@ -103,7 +103,7 @@ export function GuestChat(props: { slug: string; name: string; nameAr: string; p
           <HotelMark className="size-6" />
         </span>
         <div className="min-w-0">
-          <p className="truncate font-display text-lg leading-tight">{name}</p>
+          <p className="truncate font-display text-lg font-semibold leading-tight">{name}</p>
           <p className="truncate text-[13px] text-hotel-on-primary/80" dir="rtl" lang="ar">
             {nameAr} · مساعد الضيوف
           </p>

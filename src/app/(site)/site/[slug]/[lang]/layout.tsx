@@ -1,13 +1,9 @@
 import type { Viewport } from "next";
 // Fonts are bundled with the app (self-hosted): no request to Google at build or run time.
-import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource-variable/fraunces";
 import "@fontsource/ibm-plex-sans-arabic/400.css";
 import "@fontsource/ibm-plex-sans-arabic/500.css";
 import "@fontsource/ibm-plex-sans-arabic/600.css";
 import "@fontsource/ibm-plex-sans-arabic/700.css";
-import "@fontsource/amiri/400.css";
-import "@fontsource/amiri/700.css";
 import "../../../../globals.css";
 import { brandStyle } from "@/lib/site/brand-style";
 import { findSite, isSiteLanguage } from "@/lib/site/load";

@@ -1,6 +1,3 @@
-// The chat uses the hotel's display fonts for its header (the main layout loads the text fonts).
-import "@fontsource-variable/fraunces";
-import "@fontsource/amiri/400.css";
 import { notFound } from "next/navigation";
 import { GuestChat } from "@/components/GuestChat";
 import { config } from "@/lib/config";

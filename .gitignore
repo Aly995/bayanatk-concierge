@@ -12,3 +12,7 @@ next-env.d.ts
 .open-next/
 .wrangler/
 .dev.vars
+
+# Original photos stay out of git (size, licences); only the optimised WebP files are committed.
+public/images/originals/*
+!public/images/originals/.gitkeep

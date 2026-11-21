@@ -38,7 +38,7 @@ export function SiteHeader({ hotel, lang, s }: SiteProps) {
   return (
     <header className="sticky top-0 z-30 bg-hotel text-hotel-on-primary shadow-[0_1px_0_var(--color-hotel-deep)]">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
-        <Link href={home} className="min-w-0 truncate font-display text-xl font-medium">
+        <Link href={home} className="min-w-0 truncate font-display text-xl font-semibold">
           {hotelName(hotel, lang)}
         </Link>
         <nav aria-label={s.sectionsLabel} className="ms-auto hidden gap-5 text-[15px] xl:flex">
@@ -79,13 +79,13 @@ export function SiteHeader({ hotel, lang, s }: SiteProps) {
 export function SiteFooter({ hotel, site, lang, s }: SiteProps) {
   const other: SiteLanguage = lang === "ar" ? "en" : "ar";
   const link = "text-hotel-on-primary/85 underline-offset-4 hover:text-hotel-on-primary hover:underline";
-  const head = "font-display text-lg font-medium";
+  const head = "font-display text-lg font-semibold";
   return (
     <footer className="relative isolate overflow-hidden bg-hotel-deep text-hotel-on-primary">
       <GeometricPattern opacity={0.08} size={80} className="-z-10" />
       <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-28 pt-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.1fr_1.3fr_1.2fr_0.8fr]">
         <div>
-          <p className="font-display text-2xl font-medium">{hotelName(hotel, lang)}</p>
+          <p className="font-display text-2xl font-semibold">{hotelName(hotel, lang)}</p>
           <p className="mt-3 max-w-xs text-hotel-on-primary/75">{site.location.address[lang]}</p>
           {site.licence && (
             <p className="mt-4 text-sm text-hotel-on-primary/75">

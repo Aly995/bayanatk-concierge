@@ -29,6 +29,11 @@ export const photoSchema = z.object({
    */
   src: z.union([z.string().url().startsWith("https://"), z.string().regex(/^\/images\/[a-z0-9-]{2,60}$/)]),
   alt: localized,
+  /**
+   * The point to keep in view when the photo is cropped to fit its frame (an arch, a card),
+   * in percent from the left and from the top. Default: the centre.
+   */
+  focus: z.object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) }).optional(),
 });
 export type Photo = z.infer<typeof photoSchema>;
 

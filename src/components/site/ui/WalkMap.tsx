@@ -70,7 +70,7 @@ export function WalkMap(props: {
         {props.minutesLabel}
       </span>
       {!props.compact && (
-        <span dir="auto" className="absolute left-[77.3%] top-[18%] -translate-x-1/2 text-center font-display text-lg text-hotel">
+        <span dir="auto" className="absolute left-[77.3%] top-[18%] -translate-x-1/2 text-center font-display text-lg font-semibold text-hotel">
           {props.mosqueLabel}
         </span>
       )}

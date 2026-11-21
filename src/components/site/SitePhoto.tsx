@@ -24,6 +24,7 @@ export function SitePhoto(props: {
       sizes={srcSet ? (props.sizes ?? "100vw") : undefined}
       alt={props.photo.alt[props.lang]}
       className={`object-cover ${props.className ?? ""}`}
+      style={props.photo.focus ? { objectPosition: `${props.photo.focus.x}% ${props.photo.focus.y}%` } : undefined}
       loading={props.priority ? "eager" : "lazy"}
       fetchPriority={props.priority ? "high" : undefined}
       decoding="async"

@@ -193,7 +193,7 @@ export function DateRangePicker(props: {
               <Icon name="chevron-start" />
             </button>
             <div className="text-center" aria-live="polite">
-              <p className="font-display text-lg font-medium text-hotel">{gregorianMonthLabel(view.year, view.month, props.lang)}</p>
+              <p className="font-display text-lg font-semibold text-hotel">{gregorianMonthLabel(view.year, view.month, props.lang)}</p>
               <p className="text-xs text-hotel-ink/65">{hijriMonthSpan(view.year, view.month, props.lang)}</p>
             </div>
             <button type="button" aria-label={s.picker.nextMonth} onClick={() => setView((v) => addMonths(v.year, v.month, 1))} className="rounded-full p-2 hover:bg-hotel/[0.07]">

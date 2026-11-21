@@ -27,7 +27,7 @@ import { WalkMap } from "./ui/WalkMap";
 const wrap = "mx-auto max-w-6xl px-5 sm:px-6";
 /** Vertical rhythm between sections: one token, tighter on phones. */
 const section = "py-section-sm md:py-section";
-const h2 = "font-display text-[2rem] font-medium leading-tight tracking-display text-hotel sm:text-[2.75rem]";
+const h2 = "font-display text-[2rem] font-semibold leading-tight tracking-display text-hotel sm:text-[2.75rem]";
 const lead = "mt-4 max-w-2xl text-lg leading-relaxed text-hotel-ink/75";
 const outlineButton =
   "inline-flex items-center justify-center gap-2 rounded-control border border-hotel px-5 py-2.5 font-semibold text-hotel transition-colors hover:bg-hotel hover:text-hotel-on-primary";
@@ -50,24 +50,14 @@ function Heading({ id, title, intro, center = false }: { id: string; title: stri
 export function Hero({ hotel, site, lang, s, today }: SiteProps & { today: string }) {
   return (
     <section className="relative isolate bg-hotel text-hotel-on-primary">
-      {site.heroPhoto ? (
-        <>
-          <div aria-hidden="true" className="absolute inset-0 -z-20 overflow-hidden">
-            <SitePhoto photo={site.heroPhoto} lang={lang} priority sizes="100vw" className="size-full" fallback={null} />
-          </div>
-          {/* Deep-green gradient keeps the white headline readable on any photo. */}
-          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-hotel/75 via-hotel/55 to-hotel/90" />
-        </>
-      ) : (
-        <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
-          <GeometricPattern opacity={0.16} size={96} />
-        </div>
-      )}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
+        <GeometricPattern opacity={0.16} size={96} />
+      </div>
       <div className={`${wrap} pt-12 md:pt-20`}>
-        <div className={`grid items-center gap-12 ${site.heroPhoto ? "min-h-[46vh]" : "md:grid-cols-[1.1fr_1fr]"}`}>
+        <div className="grid items-center gap-12 md:grid-cols-[1.1fr_1fr]">
           <div>
-            <h1 className="font-display text-[2.6rem] font-normal leading-[1.08] tracking-display text-balance sm:text-[4rem]">{pick(site.tagline, lang)}</h1>
-            <p className="mt-5 text-lg text-hotel-on-primary/80 rtl:mt-7">{s.viaGate(pick(site.location.gate, lang))}</p>
+            <h1 className="font-display text-[2.6rem] font-medium leading-[1.12] tracking-display text-balance sm:text-[4rem] rtl:leading-[1.35]">{pick(site.tagline, lang)}</h1>
+            <p className="mt-5 text-lg text-hotel-on-primary/80">{s.viaGate(pick(site.location.gate, lang))}</p>
             <ul className="mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2" aria-label={s.perksTitle}>
               {site.perks.map((perk) => (
                 <li key={perk.en} className="flex gap-2.5 text-[15px] text-hotel-on-primary/90">
@@ -77,13 +67,25 @@ export function Hero({ hotel, site, lang, s, today }: SiteProps & { today: strin
               ))}
             </ul>
           </div>
-          {/* No hero photo yet: the drawing shows in an arched window. */}
-          {!site.heroPhoto && (
-            <figure className="relative overflow-hidden rounded-t-arch bg-hotel-surface">
+          {/*
+            The hero photo (or, until the hotel adds one, the drawing) in an arched window.
+            The arch keeps the photo clear of the headline in both reading directions.
+          */}
+          <figure className="relative mx-auto w-full max-w-md overflow-hidden rounded-t-arch bg-hotel-surface md:max-w-none">
+            {site.heroPhoto ? (
+              <SitePhoto
+                photo={site.heroPhoto}
+                lang={lang}
+                priority
+                sizes="(min-width: 768px) 46vw, 90vw"
+                className="aspect-[4/5] w-full md:aspect-[5/6]"
+                fallback={null}
+              />
+            ) : (
               <WalkRoute className="mt-14 h-auto w-full px-6 rtl:-scale-x-100" />
-              <span aria-hidden="true" className="pointer-events-none absolute inset-2 rounded-t-arch border border-hotel-accent/60" />
-            </figure>
-          )}
+            )}
+            <span aria-hidden="true" className="pointer-events-none absolute inset-2 rounded-t-arch border border-hotel-accent/60" />
+          </figure>
         </div>
         <BookingBar hotel={hotel} site={site} lang={lang} s={s} today={today} />
         <KeyFacts hotel={hotel} site={site} lang={lang} s={s} />
@@ -147,7 +149,7 @@ export function Rooms({ hotel, site, lang, s }: SiteProps) {
                 fallback={<RoomView view={room.view} className="size-full" />}
                 className="w-full"
               >
-                <h3 className="mt-5 font-display text-[1.4rem] font-medium text-hotel">{pick(room.name, lang)}</h3>
+                <h3 className="mt-5 font-display text-[1.4rem] font-semibold text-hotel">{pick(room.name, lang)}</h3>
                 <ul className="mb-4 mt-3 space-y-1.5 text-sm text-hotel-ink/75">
                   <li className="flex items-center gap-2">
                     <Icon name="bed" className="size-4 shrink-0 text-hotel" />
@@ -252,7 +254,7 @@ export function Facilities({ site, lang, s }: SiteProps) {
                   <span className="flex size-11 items-center justify-center rounded-full bg-hotel/[0.07] text-hotel">
                     <Icon name={f.icon} className="size-5" />
                   </span>
-                  <h3 className="mt-4 font-display text-2xl font-medium text-hotel">{pick(f.title, lang)}</h3>
+                  <h3 className="mt-4 font-display text-2xl font-semibold text-hotel">{pick(f.title, lang)}</h3>
                   <p className="mt-3 max-w-lg text-lg leading-relaxed text-hotel-ink/80">{pick(f.text, lang)}</p>
                 </div>
               </article>
@@ -266,7 +268,7 @@ export function Facilities({ site, lang, s }: SiteProps) {
                   <Icon name={f.icon} className="size-6" />
                 </span>
                 <div>
-                  <h3 className="font-display text-xl font-medium text-hotel">{pick(f.title, lang)}</h3>
+                  <h3 className="font-display text-xl font-semibold text-hotel">{pick(f.title, lang)}</h3>
                   <p className="mt-2 leading-relaxed text-hotel-ink/80">{pick(f.text, lang)}</p>
                 </div>
               </li>
@@ -294,7 +296,7 @@ export function GuestRatings({ site, s }: SiteProps) {
               <li key={r.source}>
                 <a href={r.url} target="_blank" rel="noopener" className="block rounded-card bg-hotel-paper p-6 shadow-card ring-1 ring-hotel-ink/5 hover:ring-hotel/30">
                   <p className="font-semibold text-hotel-ink/70">{r.source}</p>
-                  <p className="mt-2 font-display text-4xl font-medium text-hotel">
+                  <p className="mt-2 font-display text-4xl font-semibold text-hotel">
                     {r.score} <span className="text-base text-hotel-ink/60">{s.ratings.outOf(r.outOf)}</span>
                   </p>
                   <p className="mt-1 text-sm text-hotel-ink/65">{s.ratings.reviews(r.count)}</p>
@@ -328,7 +330,7 @@ export function Offers({ hotel, site, lang, s }: SiteProps) {
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {site.offers.map((offer) => (
             <article key={offer.id} className="flex flex-col rounded-card border-t-2 border-hotel-accent bg-hotel-surface p-7 sm:p-9">
-              <h3 className="font-display text-2xl font-medium text-hotel">{pick(offer.title, lang)}</h3>
+              <h3 className="font-display text-2xl font-semibold text-hotel">{pick(offer.title, lang)}</h3>
               <p className="mt-1 text-[15px] font-semibold text-hotel-ink/70">{pick(offer.validity, lang)}</p>
               <p className="mt-4 leading-relaxed">{pick(offer.description, lang)}</p>
               <h4 className="mt-6 text-sm font-semibold text-hotel-ink/70">{s.includes}</h4>
@@ -357,7 +359,7 @@ export function Groups({ hotel, lang, s }: SiteProps) {
       <GeometricPattern opacity={0.14} size={80} className="-z-10" />
       <div className={`${wrap} ${section} reveal flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between`}>
         <div className="max-w-2xl">
-          <h2 id="groups-title" className="font-display text-[2rem] font-medium leading-tight tracking-display sm:text-[2.5rem]">{s.groupsTitle}</h2>
+          <h2 id="groups-title" className="font-display text-[2rem] font-semibold leading-tight tracking-display sm:text-[2.5rem]">{s.groupsTitle}</h2>
           <p className="mt-3 text-lg text-hotel-on-primary/85">{s.groupsBody}</p>
         </div>
         <Link href={`${sitePath(hotel.slug, lang, "book")}?group=1`} className={`${accentButton} shrink-0 px-7 py-3.5`}>
@@ -394,7 +396,7 @@ export function FaqAndPolicies({ site, lang, s }: SiteProps) {
           </div>
         </div>
         <aside aria-labelledby="policies-title" className="h-fit rounded-card bg-hotel-paper p-7 shadow-card ring-1 ring-hotel-ink/5 lg:mt-24">
-          <h2 id="policies-title" className="font-display text-xl font-medium text-hotel">{s.policiesTitle}</h2>
+          <h2 id="policies-title" className="font-display text-xl font-semibold text-hotel">{s.policiesTitle}</h2>
           <dl className="mt-5 space-y-5">
             {items.map((i) => (
               <div key={i.term}>

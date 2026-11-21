@@ -17,11 +17,16 @@
    * Fonts. Latin text uses the first family; Arabic letters fall through to the Arabic
    * family on the same stack, so mixed text always gets a real font, never the browser default.
    */
-  --font-sans: "Plus Jakarta Sans Variable", "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --font-arabic: "IBM Plex Sans Arabic", "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  /*
+   * One family for Arabic and Latin, as in the Nusuk app (Ministry of Hajj and Umrah):
+   * IBM Plex Sans Arabic, which includes matching Latin letters. Open Font License.
+   * Urdu keeps a Nastaliq face, the style Urdu readers expect.
+   */
+  --font-sans: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", system-ui, sans-serif;
   --font-urdu: "Noto Nastaliq Urdu", "IBM Plex Sans Arabic", serif;
-  /* Headings on hotel websites: a refined serif for Latin, Amiri (Naskh) for Arabic. */
-  --font-display: "Fraunces Variable", "Amiri", Georgia, serif;
+  /* Headings: same family, heavier weight. A separate token so a hotel brand can change it. */
+  --font-display: "IBM Plex Sans Arabic", system-ui, sans-serif;
 
   /* Hotel website layout tokens: change spacing, corners and shadows here, not in components. */
   --spacing-section: 7rem;
@@ -31,7 +36,7 @@
   --radius-arch: 999px;
   --shadow-card: 0 1px 2px rgb(18 33 30 / 0.05), 0 18px 40px -24px rgb(18 33 30 / 0.28);
   --shadow-float: 0 10px 30px -10px rgb(18 33 30 / 0.45);
-  --tracking-display: -0.015em;
+  --tracking-display: -0.01em;
 }
 
 /*
@@ -68,6 +73,10 @@
   :lang(ar),
   [dir="rtl"] {
     font-family: var(--font-arabic);
+  }
+  /* Arabic letters join, so headings are never letter-spaced in Arabic. */
+  :lang(ar) {
+    --tracking-display: 0em;
   }
   :lang(ur) {
     font-family: var(--font-urdu);

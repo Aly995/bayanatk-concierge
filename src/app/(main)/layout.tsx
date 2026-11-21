@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 // Fonts are bundled with the app (self-hosted): no request to Google at build or run time.
-import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource/ibm-plex-sans-arabic/400.css";
 import "@fontsource/ibm-plex-sans-arabic/500.css";
 import "@fontsource/ibm-plex-sans-arabic/600.css";

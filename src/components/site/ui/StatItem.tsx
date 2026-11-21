@@ -9,7 +9,7 @@ export function StatItem({ icon, value, label }: { icon: IconName; value: string
       </span>
       <dl className="flex min-w-0 flex-col-reverse">
         <dt className="text-sm text-hotel-ink/70">{label}</dt>
-        <dd className="font-display text-2xl font-medium leading-tight text-hotel">{value}</dd>
+        <dd className="font-display text-2xl font-semibold leading-tight text-hotel">{value}</dd>
       </dl>
     </div>
   );
